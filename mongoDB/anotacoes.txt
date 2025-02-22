@@ -33,6 +33,32 @@ Rodar o servidor:
 -Execute o servidor para ver se ele inicia sem erros: npm run dev
 -Se aparecer "Servidor rodando em http://localhost:3000", está tudo certo até aqui.
 
+Testar a rota de usuários:
+-Use Postman, Insomnia ou cURL para chamar a rota de usuários.
+
+Usando cURL no terminal:
+-curl -X POST http://localhost:3000/api/users (criar usuário)
+-curl -X GET http://localhost:3000/api/users (consultar todos usuários)
+-curl -X GET http://localhost:3000/api/users/:id (consultar 1 usuário)
+-curl -X PUT http://localhost:3000/api/users/:id (atualizar 1 usuário)
+-curl -X DELETE http://localhost:3000/api/users/:id (deletar 1 usuário)
+
+Postman/Insomnia:
+-Método: POST (criar usuário)
+-URL: http://localhost:3000/api/users
+ 
+-Método: GET (consultar todos usuários)
+-URL: http://localhost:3000/api/users 
+
+-Método: GET (consultar 1 usuário)
+-URL: http://localhost:3000/api/users/:id 
+
+-Método: PUT (atualizar 1 usuário)
+-URL: http://localhost:3000/api/users/:id 
+
+-Método: DELETE (deletar 1 usuário)
+-URL: http://localhost:3000/api/users/:id 
+
 Testar a rota de migração:
 -Use Postman, Insomnia ou cURL para chamar a rota que inicia a migração.
 
