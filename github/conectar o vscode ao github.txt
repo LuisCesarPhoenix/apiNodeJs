@@ -1,10 +1,11 @@
 Passo a passo para enviar o projeto do VS Code para o GitHub e sincronizar as alterações.
 
 Pré-requisitos:
-a) Conta no GitHub: Se você ainda não tem uma, crie uma conta gratuita em github.com.
-b) Git instalado: O Git é essencial para controlar as versões do seu código. Você pode baixá-lo em git-scm.com.
-c) VS Code instalado: Certifique-se de ter o Visual Studio Code instalado no seu computador.
-d) Extensão GitHub: Instale a extensão "GitHub Pull Requests and Issues" no VS Code para facilitar a integração com o GitHub.
+a) Conta no GitHub: Se você ainda não tem uma, crie uma conta gratuita em github.com
+b) Git instalado: O Git é essencial para controlar as versões do seu código. Você pode baixá-lo em https://git-scm.com/
+c) VS Code instalado: Certifique-se de ter o Visual Studio Code instalado no seu computador. Você pode baixá-lo em https://code.visualstudio.com/download
+d) Extensão GitHub: Após baixar e instalar o VS Code, instale a extensão "GitHub Pull Requests and Issues" no VS Code para facilitar 
+a integração com o GitHub.
 
 Passo 1: Criar um repositório no GitHub
 a) Acesse sua conta no GitHub e clique no botão "New" (Novo) para criar um novo repositório.
@@ -15,11 +16,12 @@ e) Marque a opção "Add a README file" (Adicionar um arquivo README) para criar
 f) Clique em "Create repository" (Criar repositório).
 
 Passo 2: Inicializar o Git no seu projeto (VS Code)
-a) Abra a pasta do seu projeto no VS Code.
-b) Abra o terminal integrado do VS Code (Visualizar > Terminal).
-c) No terminal, execute o comando git init para inicializar um repositório Git local.
-d) git config --global user.email "cesarrodriguesgoncalves@hotmail.com"
-e) git config --global user.name "LuisCesarPhoenix"
+a) Logue com a sua conta do GitHub no VS Code.
+b) Abra a pasta do seu projeto no VS Code.
+c) Abra o terminal integrado do VS Code (Visualizar > Terminal > New terminal).
+d) No terminal, execute o comando git init para inicializar um repositório Git local.
+e) dê o comando git config --global user.email "cesarrodriguesgoncalves@hotmail.com" (substitua pelo seu email)
+f) dê o comando git config --global user.name "LuisCesarPhoenix" (substitua pelo seu nome de usuário) 
 Observação:
 O --global define essa configuração para todos os repositórios no seu computador.
 Se quiser configurar apenas para um projeto específico, remova --global e execute dentro da pasta do projeto.
@@ -30,11 +32,14 @@ b) Use o comando git commit -m "Mensagem inicial do commit" para criar um commit
 commit" por uma mensagem descritiva.
 
 Passo 4: Conectar o repositório local ao repositório remoto (GitHub)
-a) No seu repositório no GitHub, copie a URL do repositório (HTTPS ou SSH).
-b) No terminal do VS Code, execute o comando git remote add origin https://github.com/LuisCesarPhoenix/apiNodeJs.git
+a) Dentro do repositório que você criou no GitHub, clique no botão verde Code e copie a URL do repositório. A URL (HTTPS ou 
+SSH) do repositório termina com .git
+b) No terminal do VS Code, execute o comando git remote add origin https://github.com/LuisCesarPhoenix/apiNodeJs.git (substitua pela 
+URL do seu repositório).
 
 Passo 5: Enviar os arquivos para o GitHub
-a) Use o comando git push -u origin master para enviar seus commits para o repositório remoto no GitHub.
+a) Use o comando git push -u origin master para enviar seus commits para o repositório remoto no GitHub. No meu caso eu usei o 
+master, mas você pode substituir pelo main.
 
 Passo 6: Sincronizar alterações futuras
 1-Sempre que você fizer alterações no seu código no VS Code:
@@ -44,7 +49,6 @@ c) Use git push para enviar as alterações para o GitHub.
 
 Dicas adicionais:
 -Arquivo .gitignore: Crie um arquivo .gitignore na raiz do seu projeto para ignorar arquivos e pastas que você não quer enviar para 
-o 
-GitHub (por exemplo, arquivos de configuração, pastas de dependências).
+o GitHub (por exemplo, arquivos de configuração, pastas de dependências).
 -Branches: Use branches para desenvolver novas funcionalidades ou corrigir bugs sem afetar a versão principal do seu código.
 -Pull requests: Use pull requests para revisar e discutir as alterações antes de mesclá-las à branch principal.
