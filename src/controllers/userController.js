@@ -58,6 +58,54 @@ async function createUser(req, res) {
   }
 }
 
+// 🟢 Função para atualizar um usuário dinamicamente
+async function updateUser(req, res) {
+  const { id } = req.params;
+  const fields = req.body;
+
+  if (Object.keys(fields).length === 0) {
+    return res.status(400).json({ error: 'Pelo menos um campo deve ser atualizado' });
+  }
+
+  try {
+    // Construir a query dinamicamente
+    const updates = Object.keys(fields).map(key => `${key} = ?`).join(', ');
+    const values = Object.values(fields);
+
+    // Adicionar o ID ao final da lista de valores
+    values.push(id);
+
+    const query = `UPDATE users SET ${updates} WHERE id = ?`;
+
+    const result = await queryDatabase(query, values);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Usuário não encontrado' });
+    }
+
+    res.json({ message: 'Usuário atualizado com sucesso' });
+  } catch (error) {
+    console.error('❌ Erro ao atualizar usuário:', error);
+    res.status(500).json({ error: 'Erro ao atualizar usuário' });
+  }
+}
+
+// 🟢 Função para deletar um usuário
+async function deleteUser(req, res) {
+  const { id } = req.params;
+  try {
+    const result = await queryDatabase('DELETE FROM users WHERE id = ?', [id]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Usuário não encontrado' });
+    }
+    res.json({ message: 'Usuário deletado com sucesso' });
+  } catch (error) {
+    console.error('❌ Erro ao deletar usuário:', error);
+    res.status(500).json({ error: 'Erro ao deletar usuário' });
+  }
+}
+
 // 🟢 Função para autenticar usuário e gerar token JWT
 async function loginUser(req, res) {
   const { email, password } = req.body;
@@ -99,62 +147,14 @@ function authenticateToken(req, res, next) {
   }
 }
 
-// 🟢 Função para atualizar um usuário dinamicamente
-async function updateUser(req, res) {
-  const { id } = req.params;
-  const fields = req.body;
-
-  if (Object.keys(fields).length === 0) {
-    return res.status(400).json({ error: 'Pelo menos um campo deve ser atualizado' });
-  }
-
-  try {
-    // Construir a query dinamicamente
-    const updates = Object.keys(fields).map(key => `${key} = ?`).join(', ');
-    const values = Object.values(fields);
-
-    // Adicionar o ID ao final da lista de valores
-    values.push(id);
-
-    const query = `UPDATE users SET ${updates} WHERE id = ?`;
-
-    const result = await queryDatabase(query, values);
-
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ error: 'Usuário não encontrado' });
-    }
-
-    res.json({ message: 'Usuário atualizado com sucesso' });
-  } catch (error) {
-    console.error('❌ Erro ao atualizar usuário:', error);
-    res.status(500).json({ error: 'Erro ao atualizar usuário' });
-  }
-}
-
-// 🟢 Função para deletar um usuário
-async function deleteUser(req, res) {
-  const { id } = req.params;
-  try {
-    const result = await queryDatabase('DELETE FROM users WHERE id = ?', [id]);
-    
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ error: 'Usuário não encontrado' });
-    }
-    res.json({ message: 'Usuário deletado com sucesso' });
-  } catch (error) {
-    console.error('❌ Erro ao deletar usuário:', error);
-    res.status(500).json({ error: 'Erro ao deletar usuário' });
-  }
-}
-
 module.exports = {
   getUsers,
   getUserById,
   createUser,
-  loginUser,
   updateUser,
   deleteUser,
-  authenticateToken
+  loginUser,
+	authenticateToken
 };
 
 

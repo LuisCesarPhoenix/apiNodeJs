@@ -10,7 +10,7 @@ O Express facilita a criação de servidores HTTP.
 Ele oferece suporte a rotas, middlewares, requisições e respostas HTTP.
 */
 
-const { getUsers, getUserById, createUser, loginUser, updateUser, deleteUser, authenticateToken } = require('../controllers/userController');
+const { getUsers, getUserById, createUser, updateUser, deleteUser, loginUser, authenticateToken } = require('../controllers/userController');
 /*
 Aqui estamos importando funções do arquivo userController.js, localizado na pasta controllers.
 O que isso significa?
@@ -50,18 +50,6 @@ Quando um cliente faz uma requisição POST para /api/users, o servidor cria um 
 createUser recebe os dados no corpo da requisição e os insere no banco de dados.
 */
 
-router.post('/login', loginUser);
-/*
-1-Define uma rota POST no caminho /login.
-2-Associa essa rota à função loginUser, que está importada do userController.js.
-3-Quando um usuário faz uma requisição POST para /login, o servidor chama a função loginUser, que:
-a) Recebe o e-mail e a senha no corpo da requisição.
-b) Consulta o banco de dados para verificar se o usuário existe.
-c) Compara a senha fornecida com a senha criptografada no banco usando bcrypt.
-d) Se estiver correta, gera um token JWT e retorna para o usuário.
-e) Caso contrário, retorna um erro.
-*/
-
 router.put('/users/:id', updateUser);
 /*
 Define uma rota PUT no caminho /:id, que executa a função updateUser.
@@ -76,6 +64,18 @@ Define uma rota DELETE no caminho /:id, que executa a função deleteUser.
 O que isso significa?
 Quando um cliente faz uma requisição DELETE para /api/users/:id, o servidor remove o usuário correspondente do banco de dados.
 deleteUser deleta o usuário pelo ID e retorna uma confirmação.
+*/
+
+router.post('/login', loginUser);
+/*
+1-Define uma rota POST no caminho /login.
+2-Associa essa rota à função loginUser, que está importada do userController.js.
+3-Quando um usuário faz uma requisição POST para /login, o servidor chama a função loginUser, que:
+a) Recebe o e-mail e a senha no corpo da requisição.
+b) Consulta o banco de dados para verificar se o usuário existe.
+c) Compara a senha fornecida com a senha criptografada no banco usando bcrypt.
+d) Se estiver correta, gera um token JWT e retorna para o usuário.
+e) Caso contrário, retorna um erro.
 */
 
 //router.get('/auth', authenticateToken);
