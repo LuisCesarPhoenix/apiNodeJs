@@ -1,0 +1,66 @@
+Iniciar dois servidores MongoDB em portas diferentes: 
+Por padrão, o MongoDB roda na porta 27017, mas você pode iniciar outra instância em uma porta diferente (exemplo: 27018).
+
+Linux/macOS (Terminal): mongod --port 27018 --dbpath /data/db2
+-Se o diretório /data/db2 não existir, crie-o antes:
+-mkdir -p /data/db2
+
+Windows (CMD ou PowerShell): mongod --port 27018 --dbpath C:\data\db2
+-Se o diretório não existir, crie-o antes:
+-mkdir C:\data\db2
+
+Agora, você terá dois servidores MongoDB rodando:
+-mongodb://localhost:27017 → Servidor A
+-mongodb://localhost:27018 → Servidor B
+
+Verificar se os bancos de dados estão acessíveis
+-Antes de rodar a migração, teste se você consegue conectar nos dois bancos:
+
+Testar o MongoDB antigo (MONGO_URI_OLD): 
+-mongosh "mongodb://localhost:27017"
+
+Testar o MongoDB novo (MONGO_URI_NEW):
+-mongosh "mongodb://localhost:27018"
+
+Depois de conectar, execute:
+-show dbs
+-use servidor_A  # ou o nome do banco antigo
+-show collections
+
+Se você conseguir listar as coleções, significa que a conexão está funcionando. Faça o mesmo para o novo banco.
+
+Rodar o servidor:
+-Execute o servidor para ver se ele inicia sem erros: npm run dev
+-Se aparecer "Servidor rodando em http://localhost:3000", está tudo certo até aqui.
+
+Testar a rota de migração:
+-Use Postman, Insomnia ou cURL para chamar a rota que inicia a migração.
+
+Usando cURL no terminal:
+-curl -X POST http://localhost:3000/api/migrate
+
+Postman/Insomnia:
+-Método: POST
+-URL: http://localhost:3000/api/migrate
+-Body: (Deixe vazio, pois a migração já está configurada no backend)
+
+Se a migração estiver funcionando, você verá algo assim no terminal:
+🔄 Iniciando migração da coleção "cadastro_A" para "cadastro_B"...
+✅ 1000 registros migrados...
+✅ 2000 registros migrados...
+🎉 Migração concluída com sucesso!
+
+E no Postman/Insomnia, a resposta deve ser:
+{
+  "message": "Migração concluída!",
+  "total": 2000
+}
+
+Verificar se os dados foram migrados:
+-Depois da migração, entre no novo MongoDB e veja se os dados chegaram:
+-mongosh "mongodb://localhost:27018"
+-show dbs
+-use servidor_B
+-show collections
+-db.cadastro_B.find().limit(5)
+-Se aparecerem os registros, está funcionando! ✅🎉

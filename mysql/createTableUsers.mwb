@@ -1,0 +1,59 @@
+CREATE DATABASE IF NOT EXISTS teste;
+
+USE teste;
+
+CREATE TABLE USERS(
+id int auto_increment primary key,
+name varchar(100) not null,
+username varchar(100) not null unique,
+email varchar(100) not null unique,
+password varchar(20) not null);
+
+SHOW DATABASES;
+
+USE TESTE;
+
+ALTER TABLE users MODIFY COLUMN password VARCHAR(200);
+#Alterar tabela users modificando a coluna password para VARCHAR(200)
+
+ALTER TABLE users MODIFY COLUMN name VARCHAR(50);
+
+ALTER TABLE users MODIFY COLUMN username VARCHAR(20);
+
+ALTER TABLE users MODIFY COLUMN email VARCHAR(50);
+
+ALTER TABLE users ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+/*
+created_at → Nome da coluna.
+TIMESTAMP → Tipo de dado, que armazena data e hora.
+DEFAULT CURRENT_TIMESTAMP → Define um valor padrão para a coluna, preenchendo automaticamente com a data e hora do momento em que o registro foi inserido na tabela.
+*/
+
+Quais são os tipos de dados apropriados para colunas como endereço, e-mail, telefone e celular, para base de dados SQL?
+
+Razão Social VARCHAR(255)
+Nome Fantasia VARCHAR(255)
+CNPJ BIGINT(14), VARCHAR(18)
+Data de Fundação DATE
+Email VARCHAR(100)
+Website VARCHAR(100)
+Telefone BIGINT(14) (Já considera números de 9 dígitos). Na dúvida, use VARCHAR
+Celular BIGINT(14) (Já considera números de 9 dígitos) Na dúvida, use VARCHAR
+Responsável VARCHAR(255), VARCHAR(100)
+Endereço VARCHAR(150)
+Endereço, número VARCHAR(20) (lembre-se: "números" podem conter outros caracteres)
+Bairro VARCHAR(50)
+Cidade VARCHAR(50)
+UF CHAR(2), TINYINT(2) (uso de números se relacionado a outra tabela)
+CEP INT(8), VARCHAR(10)
+Descrição TEXT
+
+Porque VARCHAR e não CHAR?
+VARCHAR possui um tamanho variável de acordo com o registro contido nele.
+
+Exemplo: Vou inserir a palavra "Yuran" que contém 5 caracteres em uma coluna VARCHAR(20) e o mesmo registro em outra coluna que é CHAR(20)
+
+Na coluna VARCHAR vai ser utilizado apenas 5 caracteres dos 20, o tamanho daquele registro vai ser igual ao de um CHAR(5).
+
+Na coluna CHAR vai ser utilizado todos os 20 caracteres independente do tamanho do registro ficando com CHAR(20) e pesando mais no banco.
+

@@ -1,0 +1,22 @@
+Preciso criar uma aplicação que se conecte no Mongo DB do servidor antigo, leia os dados, se conecte no MongoDB do servidor atual e envie os dados para ele, conforme as colunas do arquivo, para facilitar na hora da transferência. A consulta seria em um endereço e a escrita em outro host.
+Como os arquivos são grandes, é preciso fazer um chunk da leitura do arquivo que pode ser através da função fs.createReadStream se não me engano, armazenar em uma variável os dados de no máximo 1000 linhas por vez, e a cada vez que completa as 1000 linhas inserir os dados no banco do servidor B, dessa forma evitaria deixar a conexão aberta com o banco caindo no erro de connection timeout ou algo do tipo.
+Esta aplicação pode ser em javascript através do servidor node.js que eu e o Fabio criamos, desde que seja possível configurar qual arquivo trabalhar ou que seja de forma dinâmica.
+Vou usar para transferir novos arquivos e arquivos antigos da base de dados do servidor A(antigo) para o servidor B(atual).
+Outra possibilidade é fazer conexão com dois bancos de dados diferentes, mas usando o mongodb no dois, e executar a transferência de arquivos do banco de dados do servidor A para o banco de dados do servidor B de forma automática.
+Conecta em um host, inicia a consulta e a resposta vai inserindo no outro host.
+
+A aplicação precisa conectar no Mongo DB do servidor antigo, ler os dados, conectar no MongoDB do servidor atual e enviar os dados para ele. Preciso usar um arquivo .env para confirgurar as variáveis de ambinente.
+
+Pode ser também uma função de conexão para receber parâmetros, como host do servidor e o banco de dados que a função deve acessar. Quando for fazer a requisição, for chamar a função, pode ser passado parâmetros para ela, como o endereço do host e o banco de dados que ela vai acessar na requisição do host A, banco de Dados A e as coleções que precisa. Quando receber os dados eu chamo uma função de inserção e conecta na mesma função de conexão, mas passando os parâmtros da conexão do servidor B e banco de dados B que vai receber os dados do servidor A e banco de dados A
+
+Deu certo, mas eu preciso mudar para uma conexão dinâmica com o endereço de conexão com o mongodb, pois eu vou transferir os dados do servidor remoto 141.222.96.9:27017 para o localhost:27017
+
+Se tentar conectar tabela com tabela gera erro. O melhor é sempre informar qual tabela quer usar, mas no caso de teste eu posso criar uma variável de ambiente informando a collection e a tabela, ai já deixa na conexão exemplo:
+client = instancia da conexão
+client.collection(variável com o nome da collection no caso test)
+client.find({query})
+
+Dúvidas:
+Como eu posso conectar a tabela test que está na base de dados do servidor remoto com a tabela cadastro_B que está na base de dados do servidor local? 
+MONGO_URI_OLD=mongodb://141.222.96.9:27017 (servidor remoto)
+MONGO_URI_NEW=mongodb://localhost:27017 (servidor local)  

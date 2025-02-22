@@ -1,0 +1,310 @@
+Comandos mongoDB
+
+Mostrar todos os bancos de dados:
+test> show  dbs
+admin        40.00 KiB
+config       72.00 KiB
+local        80.00 KiB
+servidor_A  616.00 KiB
+
+
+Criar um banco de dados(o banco só é criado de fato quando os dados são inseridos):
+test> use primeirobanco
+switched to db primeirobanco
+primeirobanco>
+
+
+Criar a collection e inserir o primeiro dado:
+primeirobanco> db.primeiracollection.insertOne({nome: "Luis Carlos", idade: 33, hobbies: ["ler", "jogar", "correr", "programar"]})
+{
+  acknowledged: true,
+  insertedId: ObjectId('67b067d07e40a55de1cb0ce2')
+}
+
+
+Encontrar um dado no banco:
+primeirobanco> db.primeiracollection.findOne({_id: ObjectId('67ad7ccb3caf60af36cb0ce2')})
+{
+  _id: ObjectId('67ad7ccb3caf60af36cb0ce2'),
+  nome: 'Luis Cesar',
+  idade: 42
+}
+
+
+Encontrar mais de um dado no banco:
+primeirobanco> db.primeiracollection.find({})
+[
+  {
+    _id: ObjectId('67ad7ccb3caf60af36cb0ce2'),
+    nome: 'Luis Cesar',
+    idade: 42
+  },
+  {
+    _id: ObjectId('67ad85713caf60af36cb0ce3'),
+    nome: 'Ana Paula',
+    idade: 24,
+    celular: '1199657-8956'
+  }
+]
+
+
+Encontrar todos os dados que tenha idade 42:
+primeirobanco> db.primeiracollection.find({"idade": 42})
+[
+  {
+    _id: ObjectId('67ad7ccb3caf60af36cb0ce2'),
+    nome: 'Luis Cesar',
+    idade: 42
+  }
+]
+
+
+O comando use serve para criar e trocar de banco de dados:
+primeirobanco> use servidor_A
+switched to db servidor_A
+servidor_A>
+
+
+O comando db serve para mostrar o banco atual:
+servidor_A> db
+servidor_A
+
+
+A função pretty() trás um retorno de dados melhor formatado:
+primeirobanco> db.primeiracollection.find().pretty()
+[
+  {
+    _id: ObjectId('67ad7ccb3caf60af36cb0ce2'),
+    nome: 'Luis Cesar',
+    idade: 42
+  },
+  {
+    _id: ObjectId('67ad85713caf60af36cb0ce3'),
+    nome: 'Ana Paula',
+    idade: 24,
+    celular: '1199657-8956'
+  },
+  {
+    _id: ObjectId('67b067d07e40a55de1cb0ce2'),
+    nome: 'Luis Carlos',
+    idade: 33,
+    hobbies: [ 'ler', 'jogar', 'correr', 'programar' ]
+  }
+]
+
+
+Criação de collections de forma implicita:
+Quando eu insiro limitações eu tenho que colocar o atributo capped. 
+primeirobanco> db.createCollection("segundacollection", { capped: true, size: 1000, max: 3 })
+{ ok: 1 }
+
+
+Exibir todas as collections:
+primeirobanco> show collections
+primeiracollection
+segundacollection
+
+
+Inserir múltiplos documentos de uma vez:
+primeirobanco> db.quartacollection.insertMany([{nome: "Luis Cesar", salario: 2500}, {nome: "Paula Donattis", salario: 3000}, 
+{nome: "Renata Soarez", salario: 1800}, {nome: "Ricardo Alvez", salario: 3600}])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('67b19e617e40a55de1cb0ce9'),
+    '1': ObjectId('67b19e617e40a55de1cb0cea'),
+    '2': ObjectId('67b19e617e40a55de1cb0ceb'),
+    '3': ObjectId('67b19e617e40a55de1cb0cec')
+  }
+}
+
+
+Podemos remover collections quando elas não forem mais necessárias ou se errarmos o nome, por exemplo;
+test> show dbs
+admin           40.00 KiB
+config          48.00 KiB
+local           80.00 KiB
+primeirobanco  200.00 KiB
+servidor_A     616.00 KiB
+test> use primeirobanco
+switched to db primeirobanco
+primeirobanco> show collections
+primeiracollection
+quartacollection
+segundacollection
+terceiracollection
+primeirobanco> db.segundacollection.drop()
+true
+
+
+Removendo banco de dados:
+Todos os dados e collections serão excluídos.
+test> show dbs
+admin           40.00 KiB
+config          48.00 KiB
+local           80.00 KiB
+primeirobanco  200.00 KiB
+servidor_A     616.00 KiB
+test> use primeirobanco
+switched to db primeirobanco
+test> db.dropDatabase()
+{"dropped" : "primeirobanco" , "ok" : 1}
+
+
+Importar banco de dados em JSON:
+PS C:\users\cesar\onedrive\documentos\documentos b\mongodb\curso_mongodb-main\2_gerenciamento_de_dbs> mongoimport books.json -d 
+booksData -c livros
+2025-02-19T03:57:12.419-0300    connected to: mongodb://localhost/
+2025-02-19T03:57:13.177-0300    431 document(s) imported successfully. 0 document(s) failed to import.
+
+test> show dbs
+admin           40.00 KiB
+booksData      284.00 KiB
+config          72.00 KiB
+local           80.00 KiB
+primeirobanco  160.00 KiB
+servidor_A     616.00 KiB
+
+
+Exportar banco de dados em JSON:
+PS C:\Users\cesar\onedrive\documentos\documentos b\mongodb> mongoexport -c livros -d booksData -o booksData.json
+2025-02-19T10:51:11.873-0300    connected to: mongodb://localhost/
+2025-02-19T10:51:11.980-0300    exported 431 records
+
+
+Exportar muitas collections:
+Quando o banco possui mais de uma collection a melhor opção de exportação é o mongodump;
+Utilizamos assim: mongodump -d <banco> -o <diretorio>
+Onde o -o criará uma pasta, com os arquivos de cada collection;
+PS C:\Users\cesar\onedrive\documentos\documentos b\mongodb> mongodump -d primeirobanco -o primeirobanco
+2025-02-19T22:09:50.626-0300    writing primeirobanco.quartacollection to primeirobanco\primeirobanco\quartacollection.bson
+2025-02-19T22:09:50.659-0300    writing primeirobanco.primeiracollection to primeirobanco\primeirobanco\primeiracollection.bson
+2025-02-19T22:09:50.660-0300    writing primeirobanco.terceiracollection to primeirobanco\primeirobanco\terceiracollection.bson
+2025-02-19T22:09:50.666-0300    done dumping primeirobanco.quartacollection (4 documents)
+2025-02-19T22:09:50.671-0300    done dumping primeirobanco.primeiracollection (3 documents)
+2025-02-19T22:09:50.675-0300    done dumping primeirobanco.terceiracollection (1 document)
+
+
+Importar dados do mongodump:
+Para importar os arquivos gerados do mongodump, utilizamos o mongorestore;
+O comando é o seguinte: mongorestore <diretorio>
+PS C:\Users\cesar\onedrive\documentos\documentos b\mongodb> mongorestore primeirobanco
+2025-02-19T22:35:23.321-0300    preparing collections to restore from
+2025-02-19T22:35:23.345-0300    reading metadata for primeirobanco.primeiracollection from primeirobanco\primeirobanco\primeiracollection.metadata.json
+2025-02-19T22:35:23.345-0300    reading metadata for primeirobanco.quartacollection from primeirobanco\primeirobanco\quartacollection.metadata.json
+2025-02-19T22:35:23.346-0300    reading metadata for primeirobanco.terceiracollection from primeirobanco\primeirobanco\terceiracollection.metadata.json
+2025-02-19T22:35:23.398-0300    restoring primeirobanco.quartacollection from primeirobanco\primeirobanco\quartacollection.bson
+2025-02-19T22:35:23.408-0300    restoring primeirobanco.primeiracollection from primeirobanco\primeirobanco\primeiracollection.bson
+2025-02-19T22:35:23.413-0300    finished restoring primeirobanco.quartacollection (4 documents, 0 failures)
+2025-02-19T22:35:23.416-0300    restoring primeirobanco.terceiracollection from primeirobanco\primeirobanco\terceiracollection.bson
+2025-02-19T22:35:23.427-0300    finished restoring primeirobanco.primeiracollection (3 documents, 0 failures)
+2025-02-19T22:35:23.451-0300    finished restoring primeirobanco.terceiracollection (1 document, 0 failures)
+2025-02-19T22:35:23.451-0300    no indexes to restore for collection primeirobanco.primeiracollection
+2025-02-19T22:35:23.451-0300    no indexes to restore for collection primeirobanco.quartacollection
+2025-02-19T22:35:23.451-0300    no indexes to restore for collection primeirobanco.terceiracollection
+2025-02-19T22:35:23.451-0300    8 document(s) restored successfully. 0 document(s) failed to restore.
+
+
+Podemos checar algumas informações como, quantidade de consultas rodando, consumo de rede e outros dados;
+Teremos uma aba do terminal ocupada, atualizando a todo segundo e trazendo informações em tempo real;
+PS C:\Users\cesar> mongostat
+insert query update delete getmore command dirty used flushes vsize   res qrw arw net_in net_out conn                time
+    *0    *0     *0     *0       0     0|0  0.0% 0.0%       0 4.65G 35.0M 0|0 0|0   111b   83.7k    3 Feb 20 17:07:26.409
+    *0    *0     *0     *0       0     0|0  0.0% 0.0%       0 4.65G 35.0M 0|0 0|0   111b   83.6k    3 Feb 20 17:07:27.411
+    *0    *0     *0     *0       0     1|0  0.0% 0.0%       0 4.65G 35.0M 0|0 0|0   112b   84.3k    3 Feb 20 17:07:28.406
+    *0    *0     *0     *0       0     1|0  0.0% 0.0%       0 4.65G 35.0M 0|0 0|0   112b   84.2k    3 Feb 20 17:07:29.402
+    *0    *0     *0     *0       0     0|0  0.0% 0.0%       0 4.65G 35.0M 0|0 0|0   110b   83.0k    3 Feb 20 17:07:30.411
+    *0    *0     *0     *0       0     0|0  0.0% 0.0%       0 4.65G 35.0M 0|0 0|0   111b   83.6k    3 Feb 20 17:07:31.413
+    *0    *0     *0     *0       0     1|0  0.0% 0.0%       0 4.65G 35.0M 0|0 0|0   112b   84.2k    3 Feb 20 17:07:32.409
+    *0    *0     *0     *0       0     0|0  0.0% 0.0%       0 4.65G 35.0M 0|0 0|0   111b   83.6k    3 Feb 20 17:07:33.412
+    *0    *0     *0     *0       0     1|0  0.0% 0.0%       0 4.65G 35.0M 0|0 0|0   112b   84.0k    3 Feb 20 17:07:34.410
+    *0    *0     *0     *0       0     2|0  0.0% 0.0%       0 4.65G 35.0M 0|0 0|0   321b   84.4k    3 Feb 20 17:07:35.410
+
+
+
+
+
+
+
+
+
+
+
+
+
+A principal diferença entre implementar um CRUD com MySQL ou MongoDB está no modelo de dados e na forma como as consultas são 
+estruturadas. Aqui está um comparativo:
+
+1. Modelo de Dados
+
+MySQL (Relacional):
+-Usa tabelas com colunas e linhas.
+-Dados estruturados com chaves primárias e estrangeiras.
+-Relacionamentos entre entidades são feitos com JOINs.
+
+Exemplo:
+
+CREATE TABLE users (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(255),
+  email VARCHAR(255) UNIQUE,
+  age INT
+);
+
+MongoDB (NoSQL, Orientado a Documentos):
+-Usa coleções que armazenam documentos JSON (objetos).
+-Dados sem estrutura fixa (schema flexível).
+-Relacionamentos são feitos embutindo documentos ou com referências.
+
+Exemplo:
+
+{
+  "_id": ObjectId("123abc"),
+  "name": "João",
+  "email": "joao@email.com",
+  "age": 30
+}
+
+2. Operações CRUD(create, read, update e delete):
+
+Create (Inserir dados)
+MySQL:
+INSERT INTO users (name, email, age) VALUES ('João', 'joao@email.com', 30);
+MongoDB:
+db.users.insertOne({ name: "João", email: "joao@email.com", age: 30 });
+
+Read (Consultar dados)
+MySQL:
+SELECT * FROM users WHERE age > 25;
+MongoDB:
+db.users.find({ age: { $gt: 25 } });
+
+Update (Atualizar dados)
+MySQL:
+UPDATE users SET age = 31 WHERE email = 'joao@email.com';
+MongoDB:
+db.users.updateOne({ email: "joao@email.com" }, { $set: { age: 31 } });
+
+Delete (Remover dados)
+MySQL:
+DELETE FROM users WHERE email = 'joao@email.com';
+MongoDB:
+db.users.deleteOne({ email: "joao@email.com" });
+
+3. Quando usar cada um?
+
+Use MySQL se:
+Precisa de relacionamentos fortes entre dados.
+Tem dados bem estruturados e não mudam com frequência.
+Precisa de transações ACID (Atomicidade, Consistência, Isolamento, Durabilidade).
+
+Use MongoDB se:
+Precisa de escalabilidade horizontal (muitas conexões simultâneas).
+Os dados são semiestruturados e podem mudar de formato com o tempo.
+Alta velocidade de leitura/escrita sem depender de JOINs.
+
+4. Conclusão
+MySQL é melhor para sistemas estruturados (ERP, sistemas bancários).
+MongoDB é melhor para grandes volumes de dados não estruturados (logs, big data, aplicações web escaláveis).
+Se seu sistema envolve muitas consultas e grandes volumes de dados, o MongoDB pode ser mais eficiente. Se precisa de integridade e 
+estrutura rígida, o MySQL é melhor.

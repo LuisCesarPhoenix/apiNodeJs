@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "Depurar com Nodemon e Hot Reload",
+        "runtimeExecutable": "npx",
+        "runtimeArgs": ["nodemon", "--inspect", "server.js"],
+        "envFile": "${workspaceFolder}/.env",
+        "console": "integratedTerminal",
+        "restart": true,
+        "internalConsoleOptions": "neverOpen"
+      }
+    ]
+  }
+  
