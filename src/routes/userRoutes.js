@@ -2,9 +2,9 @@
 // Rota de usuários sem conexão permanente.
 
 const express = require('express');
-/* 
-Essa linha importa o módulo Express, um framework para Node.js usado para criar aplicações web e APIs de forma simples 
-e eficiente. 
+/*
+Essa linha importa o módulo Express, um framework para Node.js usado para criar aplicações web e APIs de forma simples
+e eficiente.
 O que isso significa?
 O Express facilita a criação de servidores HTTP.
 Ele oferece suporte a rotas, middlewares, requisições e respostas HTTP.
@@ -51,6 +51,16 @@ createUser recebe os dados no corpo da requisição e os insere no banco de dado
 */
 
 router.post('/login', loginUser);
+/*
+1-Define uma rota POST no caminho /login.
+2-Associa essa rota à função loginUser, que está importada do userController.js.
+3-Quando um usuário faz uma requisição POST para /login, o servidor chama a função loginUser, que:
+a) Recebe o e-mail e a senha no corpo da requisição.
+b) Consulta o banco de dados para verificar se o usuário existe.
+c) Compara a senha fornecida com a senha criptografada no banco usando bcrypt.
+d) Se estiver correta, gera um token JWT e retorna para o usuário.
+e) Caso contrário, retorna um erro.
+*/
 
 router.put('/users/:id', updateUser);
 /*
@@ -68,8 +78,17 @@ Quando um cliente faz uma requisição DELETE para /api/users/:id, o servidor re
 deleteUser deleta o usuário pelo ID e retorna uma confirmação.
 */
 
-router.use(authenticateToken);
 //router.get('/auth', authenticateToken);
+router.use(authenticateToken);
+/*
+a) Adiciona um middleware global para todas as rotas definidas depois dessa linha.
+b) Isso significa que qualquer rota definida abaixo dessa linha exigirá um token JWT válido.
+Como funciona o middleware authenticateToken?
+1-Verifica se há um token JWT no cabeçalho da requisição (Authorization).
+2-Caso o token esteja presente, ele decodifica o token usando jsonwebtoken (jwt.verify).
+3-Se o token for válido, adiciona as informações do usuário no objeto req.user e a requisição segue normalmente.
+4-Se o token for inválido ou ausente, retorna um erro 401 (Não autorizado).
+*/
 
 module.exports = router;
 /*
@@ -87,5 +106,10 @@ Resumo do fluxo do código:
 Importa o Express e as funções do userController.
 Cria um roteador com express.Router().
 Define as rotas GET, POST, PUT e DELETE.
+Antes dessa linha (router.use(authenticateToken);), qualquer rota pode ser acessada sem autenticação.
+Depois dessa linha, todas as rotas exigem um token válido.
 Exporta o roteador para ser usado em server.js.
 */
+
+
+
