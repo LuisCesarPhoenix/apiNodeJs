@@ -221,17 +221,6 @@ insert query update delete getmore command dirty used flushes vsize   res qrw ar
     *0    *0     *0     *0       0     2|0  0.0% 0.0%       0 4.65G 35.0M 0|0 0|0   321b   84.4k    3 Feb 20 17:07:35.410
 
 
-
-
-
-
-
-
-
-
-
-
-
 A principal diferença entre implementar um CRUD com MySQL ou MongoDB está no modelo de dados e na forma como as consultas são 
 estruturadas. Aqui está um comparativo:
 

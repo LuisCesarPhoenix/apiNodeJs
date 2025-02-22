@@ -1,0 +1,475 @@
+1-Criar banco de dados se não existir:
+mysql> CREATE DATABASE IF NOT EXISTS teste;
+Query OK, 1 row affected (0.04 sec)
+
+
+2-trocar para o banco de dados teste:
+mysql> use teste;
+Database changed
+
+
+3-Criar tabela no banco de dados teste:
+mysql> CREATE TABLE teste.users(
+mysql> CREATE TABLE USERS(
+mysql> id int auto_increment,
+mysql> name varchar(100) not null,
+mysql> username varchar(100) not null unique,
+mysql> email varchar(100) not null unique,
+mysql> password varchar(20) not null,
+mysql> primary key(id)
+mysql> );
+
+
+4-Mostrar a estrutura da tabela:
+mysql> describe users;
+mysql> describe teste.users;
++------------+--------------+------+-----+-------------------+-------------------+
+| Field      | Type         | Null | Key | Default           | Extra             |
++------------+--------------+------+-----+-------------------+-------------------+
+| id         | int          | NO   | PRI | NULL              | auto_increment    |
+| name       | varchar(50)  | YES  |     | NULL              |                   |
+| username   | varchar(20)  | YES  | UNI | NULL              |                   |
+| email      | varchar(50)  | YES  | UNI | NULL              |                   |
+| PASSWORD   | varchar(255) | YES  |     | NULL              |                   |
+| created_at | timestamp    | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
++------------+--------------+------+-----+-------------------+-------------------+
+
+
+5-Mostrar todos os bancos de dados:
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sakila             |
+| sys                |
+| teste              |
+| teste2             |
+| world              |
++--------------------+
+
+
+6-Mostrar todos os dados da tabela:
+mysql> select * from users;
+mysql> SELECT * FROM teste.users;
++----+-------------+------------+----------------------+--------------------------------------------------------------+---------------------+
+| id | name        | username   | email                | PASSWORD                                                     | created_at          |
++----+-------------+------------+----------------------+--------------------------------------------------------------+---------------------+
+| 21 | Luiz Soarez | luizsoarez | luizsoarez@email.com | $2b$10$rBtgu0GZX6SQpQd5ClVl7Ouksh.B9yuY2D.GkhgtkBkSlCJeFvDBW | 2025-02-03 16:51:34 |
+| 22 | Paulo Cesar | paulocesar | paulocesar@email.com | $2b$10$KA8jd8AAfDMEwxb971yKve/JzuJT2qx90CSqeC0N8.nl18uBFuzgC | 2025-02-03 16:57:24 |
+| 23 | Ana Paula   | anapaula   | anapaula@email.com   | $2b$10$JYtxcxXvPIKekkza13RG9Ozy2JCZA/sST2RFJiXhllrHqF7MMv2p2 | 2025-02-03 17:06:32 |
++----+-------------+------------+----------------------+--------------------------------------------------------------+---------------------+
+
+6.1-Mostrar somente o campo email da tabela users:
+mysql> SELECT email FROM users;
+mysql> SELECT email FROM teste.users;
++-------------------------+
+| email                   |
++-------------------------+
+| anapaula@email.com      |
+| henriquetotti@email.com |
+| paulocesar@email.com    |
++-------------------------+
+
+6.2-Mostrar somente o campo email do usuário 21:
+mysql> SELECT email FROM users where id = 21;
+mysql> SELECT email FROM teste.users where id = 21;
++-------------------------+
+| email                   |
++-------------------------+
+| henriquetotti@email.com |
++-------------------------+
+
+6.3-Mostrar os campos name, username e telefone do usuário 21:
+mysql> SELECT name as Nome, telefone as Tel, username as Nome_Usuario FROM users where id = 21;
+mysql> SELECT name as Nome, telefone as Tel, username as Nome_Usuario FROM teste.users where id = 21;
++----------------+-------------+---------------+
+| Nome           | Tel         | Nome_Usuario  |
++----------------+-------------+---------------+
+| Henrique Totti | 11993465898 | henriquetotti |
++----------------+-------------+---------------+
+
+6.4-Mostrar os campos name, username e telefone do usuário Marcos Sanchez:
+mysql> SELECT name as Nome, telefone as Tel, username as Nome_Usuario FROM users where name = "Marcos Sanchez";
++----------------+-------------+---------------+
+| Nome           | Tel         | Nome_Usuario  |
++----------------+-------------+---------------+
+| Marcos Sanchez | 11923412578 | marcossanchez |
++----------------+-------------+---------------+
+
+
+7-Inserir dados na tabela users:
+mysql> INSERT INTO teste.users(name, username, email, password)
+mysql> INSERT INTO users(name, username, email, password)
+    -> VALUES ("Roberto Carlos", "robertocarlos", "robertocarlos@mail.com", "roberto654");
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select * from users;
+mysql> select * from teste.users;
++----+----------------+---------------+------------------------+--------------------------------------------------------------+---------------------+
+| id | name           | username      | email                  | PASSWORD                                                     | created_at          |
++----+----------------+---------------+------------------------+--------------------------------------------------------------+---------------------+
+| 21 | Luiz Soarez    | luizsoarez    | luizsoarez@email.com   | $2b$10$rBtgu0GZX6SQpQd5ClVl7Ouksh.B9yuY2D.GkhgtkBkSlCJeFvDBW | 2025-02-03 16:51:34 |
+| 22 | Paulo Cesar    | paulocesar    | paulocesar@email.com   | $2b$10$KA8jd8AAfDMEwxb971yKve/JzuJT2qx90CSqeC0N8.nl18uBFuzgC | 2025-02-03 16:57:24 |
+| 23 | Ana Paula      | anapaula      | anapaula@email.com     | $2b$10$JYtxcxXvPIKekkza13RG9Ozy2JCZA/sST2RFJiXhllrHqF7MMv2p2 | 2025-02-03 17:06:32 |
+| 25 | Roberto Carlos | robertocarlos | robertocarlos@mail.com | roberto654                                                   | 2025-02-17 12:16:59 |
++----+----------------+---------------+------------------------+--------------------------------------------------------------+---------------------+
+
+Se você quiser inserir em todos os campos da tabela, não é necessário descrever quais serão preenchidos. Apenas não se esqueça de 
+conferir se os valores estão na sequência correta. O SGBD subentende que todos os campos serão preenchidos.
+
+
+7.1-Inserir múltiplos usuários de uma vez na tabela users:
+mysql> INSERT INTO teste.users (name, username, email, telefone, password)
+mysql> INSERT INTO users (name, username, email, telefone, password)
+    -> VALUES ("Marcos Sanchez", "marcossanchez", "marcossanchez@email.com", "11923412578", "marcos412"),
+    -> ("Paula Gludovatz", "paulagludovatz", "paulagludovatz@email.com", "11957892773", "gludovatz741");
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> select * from users;
+mysql> select * from teste.users;
++----+-----------------+----------------+--------------------------+-------------+--------------------------------------------------------------+---------------------+
+| id | name            | username       | email                    | telefone    | PASSWORD                                                     | created_at          |
++----+-----------------+----------------+--------------------------+-------------+--------------------------------------------------------------+---------------------+
+| 21 | Henrique Totti  | henriquetotti  | henriquetotti@email.com  | 11993465898 | $2b$10$rBtgu0GZX6SQpQd5ClVl7Ouksh.B9yuY2D.GkhgtkBkSlCJeFvDBW | 2025-02-03 16:51:34 |
+| 22 | Paulo Cesar     | paulocesar     | paulocesar@email.com     | 11956874521 | $2b$10$KA8jd8AAfDMEwxb971yKve/JzuJT2qx90CSqeC0N8.nl18uBFuzgC | 2025-02-03 16:57:24 |
+| 23 | Ana Paula       | anapaula       | anapaula@email.com       | NULL        | $2b$10$JYtxcxXvPIKekkza13RG9Ozy2JCZA/sST2RFJiXhllrHqF7MMv2p2 | 2025-02-03 17:06:32 |
+| 26 | Marcos Sanchez  | marcossanchez  | marcossanchez@email.com  | 11923412578 | marcos412                                                    | 2025-02-17 15:11:40 |
+| 27 | Paula Gludovatz | paulagludovatz | paulagludovatz@email.com | 11957892773 | gludovatz741                                                 | 2025-02-17 15:11:40 |
++----+-----------------+----------------+--------------------------+-------------+--------------------------------------------------------------+---------------------+
+
+
+8-Deletar dados da tabela users:
+mysql> delete from teste.users where id = 25;
+mysql> delete from users where id = 25;
+
+mysql> select * from users;
++----+-------------+------------+----------------------+--------------------------------------------------------------+---------------------+
+| id | name        | username   | email                | PASSWORD                                                     | created_at          |
++----+-------------+------------+----------------------+--------------------------------------------------------------+---------------------+
+| 21 | Luiz Soarez | luizsoarez | luizsoarez@email.com | $2b$10$rBtgu0GZX6SQpQd5ClVl7Ouksh.B9yuY2D.GkhgtkBkSlCJeFvDBW | 2025-02-03 16:51:34 |
+| 22 | Paulo Cesar | paulocesar | paulocesar@email.com | $2b$10$KA8jd8AAfDMEwxb971yKve/JzuJT2qx90CSqeC0N8.nl18uBFuzgC | 2025-02-03 16:57:24 |
+| 23 | Ana Paula   | anapaula   | anapaula@email.com   | $2b$10$JYtxcxXvPIKekkza13RG9Ozy2JCZA/sST2RFJiXhllrHqF7MMv2p2 | 2025-02-03 17:06:32 |
++----+-------------+------------+----------------------+--------------------------------------------------------------+---------------------+
+
+
+9-Atualizar dados da tabela:
+mysql> UPDATE teste.users SET name = "Henrique Totti" , username = "henriquetotti" , email = "henriquetotti@email.com" WHERE id = 21;
+mysql> UPDATE users SET name = "Henrique Totti" , username = "henriquetotti" , email = "henriquetotti@email.com" WHERE id = 21;
+mysql> commit;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from users;
+mysql> select * from teste.users;
++----+----------------+---------------+-------------------------+--------------------------------------------------------------+---------------------+
+| id | name           | username      | email                   | PASSWORD                                                     | created_at          |
++----+----------------+---------------+-------------------------+--------------------------------------------------------------+---------------------+
+| 21 | Henrique Totti | henriquetotti | henriquetotti@email.com | $2b$10$rBtgu0GZX6SQpQd5ClVl7Ouksh.B9yuY2D.GkhgtkBkSlCJeFvDBW | 2025-02-03 16:51:34 |
+| 22 | Paulo Cesar    | paulocesar    | paulocesar@email.com    | $2b$10$KA8jd8AAfDMEwxb971yKve/JzuJT2qx90CSqeC0N8.nl18uBFuzgC | 2025-02-03 16:57:24 |
+| 23 | Ana Paula      | anapaula      | anapaula@email.com      | $2b$10$JYtxcxXvPIKekkza13RG9Ozy2JCZA/sST2RFJiXhllrHqF7MMv2p2 | 2025-02-03 17:06:32 |
++----+----------------+---------------+-------------------------+--------------------------------------------------------------+---------------------+
+
+9.1-Atualizar dados da tabela:
+mysql> update teste.users set telefone = 11956874521 where name = "Paulo Cesar";
+mysql> update users set telefone = 11956874521 where name = "Paulo Cesar";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from teste.users;
+mysql> select * from users;
++----+----------------+---------------+-------------------------+-------------+--------------------------------------------------------------+---------------------+
+| id | name           | username      | email                   | telefone    | PASSWORD                                                     | created_at          |
++----+----------------+---------------+-------------------------+-------------+--------------------------------------------------------------+---------------------+
+| 21 | Henrique Totti | henriquetotti | henriquetotti@email.com | 11993465898 | $2b$10$rBtgu0GZX6SQpQd5ClVl7Ouksh.B9yuY2D.GkhgtkBkSlCJeFvDBW | 2025-02-03 16:51:34 |
+| 22 | Paulo Cesar    | paulocesar    | paulocesar@email.com    | 11956874521 | $2b$10$KA8jd8AAfDMEwxb971yKve/JzuJT2qx90CSqeC0N8.nl18uBFuzgC | 2025-02-03 16:57:24 |
+| 23 | Ana Paula      | anapaula      | anapaula@email.com      | NULL        | $2b$10$JYtxcxXvPIKekkza13RG9Ozy2JCZA/sST2RFJiXhllrHqF7MMv2p2 | 2025-02-03 17:06:32 |
++----+----------------+---------------+-------------------------+-------------+--------------------------------------------------------------+---------------------+
+
+
+10-	limpar o terminal:
+mysql> \! cls
+
+
+11-Order By (Ordenar por asc ou desc):
+mysql> SELECT * FROM teste.users ORDER BY name desc;
+mysql> SELECT * FROM users ORDER BY name asc;
++----+----------------+---------------+-------------------------+--------------------------------------------------------------+---------------------+
+| id | name           | username      | email                   | PASSWORD                                                     | created_at          |
++----+----------------+---------------+-------------------------+--------------------------------------------------------------+---------------------+
+| 23 | Ana Paula      | anapaula      | anapaula@email.com      | $2b$10$JYtxcxXvPIKekkza13RG9Ozy2JCZA/sST2RFJiXhllrHqF7MMv2p2 | 2025-02-03 17:06:32 |
+| 21 | Henrique Totti | henriquetotti | henriquetotti@email.com | $2b$10$rBtgu0GZX6SQpQd5ClVl7Ouksh.B9yuY2D.GkhgtkBkSlCJeFvDBW | 2025-02-03 16:51:34 |
+| 22 | Paulo Cesar    | paulocesar    | paulocesar@email.com    | $2b$10$KA8jd8AAfDMEwxb971yKve/JzuJT2qx90CSqeC0N8.nl18uBFuzgC | 2025-02-03 16:57:24 |
++----+----------------+---------------+-------------------------+--------------------------------------------------------------+---------------------+
+
+
+12-Alterar dados da tabela users:
+
+mysql> ALTER TABLE teste.users MODIFY COLUMN password VARCHAR(200);
+mysql> ALTER TABLE users MODIFY COLUMN password VARCHAR(200);
+#Alterar tabela users modificando a coluna password para VARCHAR(200)
+
+mysql> ALTER TABLE users MODIFY COLUMN name VARCHAR(50);
+#Alterar a tabela users modificando a coluna name para VARCHAR(50)
+
+mysql> ALTER TABLE users MODIFY COLUMN username VARCHAR(20);
+
+mysql> ALTER TABLE teste.users MODIFY COLUMN email VARCHAR(50);
+
+mysql> ALTER TABLE teste.users ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+/*
+created_at → Nome da coluna.
+TIMESTAMP → Tipo de dado que armazena data e hora.
+DEFAULT CURRENT_TIMESTAMP → Define um valor padrão para a coluna, preenchendo automaticamente com a data e hora do momento em que o 
+registro foi inserido na tabela.
+*/
+
+mysql> ALTER TABLE teste.users CHANGE username username VARCHAR(19) NOT NULL;
+Query OK, 3 rows affected (0.11 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> describe users;
++------------+--------------+------+-----+-------------------+-------------------+
+| Field      | Type         | Null | Key | Default           | Extra             |
++------------+--------------+------+-----+-------------------+-------------------+
+| id         | int          | NO   | PRI | NULL              | auto_increment    |
+| name       | varchar(50)  | YES  |     | NULL              |                   |
+| username   | varchar(19)  | NO   | UNI | NULL              |                   |
+| email      | varchar(50)  | YES  | UNI | NULL              |                   |
+| PASSWORD   | varchar(255) | YES  |     | NULL              |                   |
+| created_at | timestamp    | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
++------------+--------------+------+-----+-------------------+-------------------+
+
+mysql> ALTER TABLE teste.users ADD telefone VARCHAR(20) AFTER email;
+mysql> ALTER TABLE users ADD telefone VARCHAR(20) AFTER email;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> describe teste.users;
+mysql> describe users;
++------------+--------------+------+-----+-------------------+-------------------+
+| Field      | Type         | Null | Key | Default           | Extra             |
++------------+--------------+------+-----+-------------------+-------------------+
+| id         | int          | NO   | PRI | NULL              | auto_increment    |
+| name       | varchar(50)  | YES  |     | NULL              |                   |
+| username   | varchar(19)  | NO   | UNI | NULL              |                   |
+| email      | varchar(50)  | YES  | UNI | NULL              |                   |
+| telefone   | varchar(20)  | YES  |     | NULL              |                   |
+| PASSWORD   | varchar(255) | YES  |     | NULL              |                   |
+| created_at | timestamp    | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
++------------+--------------+------+-----+-------------------+-------------------+
+
+
+13-Apagar banco de dados:
+mysql> DROP DATABASE teste2;
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| academia           |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sakila             |
+| sys                |
+| teste              |
+| world              |
++--------------------+
+
+
+14-Mostrar tabelas no banco de dados:
+mysql> use teste;
+Database changed
+mysql> show tables;
++-----------------+
+| Tables_in_teste |
++-----------------+
+| users           |
++-----------------+
+
+
+15-Apagar tabela do banco de dados teste;
+mysql> show tables;
++-----------------+
+| Tables_in_teste |
++-----------------+
+| contatos        |
+| users           |
++-----------------+
+
+mysql> DROP TABLE contatos;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> show tables;
++-----------------+
+| Tables_in_teste |
++-----------------+
+| users           |
++-----------------+
+
+
+16-Para deletar algum registro usamos a instrução SQL DELETE. Diferente do DROP, ele deleta os registros das colunas do banco de 
+dados.
+mysql> select * from users;
++----+-----------------+----------------+--------------------------+-------------+--------------------------------------------------------------+---------------------+
+| id | name            | username       | email                    | telefone    | PASSWORD                                                     | created_at          |
++----+-----------------+----------------+--------------------------+-------------+--------------------------------------------------------------+---------------------+
+| 21 | Henrique Totti  | henriquetotti  | henriquetotti@email.com  | 11993465898 | $2b$10$rBtgu0GZX6SQpQd5ClVl7Ouksh.B9yuY2D.GkhgtkBkSlCJeFvDBW | 2025-02-03 16:51:34 |
+| 22 | Paulo Cesar     | paulocesar     | paulocesar@email.com     | 11956874521 | $2b$10$KA8jd8AAfDMEwxb971yKve/JzuJT2qx90CSqeC0N8.nl18uBFuzgC | 2025-02-03 16:57:24 |
+| 23 | Ana Paula       | anapaula       | anapaula@email.com       | NULL        | $2b$10$JYtxcxXvPIKekkza13RG9Ozy2JCZA/sST2RFJiXhllrHqF7MMv2p2 | 2025-02-03 17:06:32 |
+| 26 | Marcos Sanchez  | marcossanchez  | marcossanchez@email.com  | 11923412578 | marcos412                                                    | 2025-02-17 15:11:40 |
+| 27 | Paula Gludovatz | paulagludovatz | paulagludovatz@email.com | 11957892773 | gludovatz741                                                 | 2025-02-17 15:11:40 |
++----+-----------------+----------------+--------------------------+-------------+--------------------------------------------------------------+---------------------+
+
+mysql> DELETE FROM teste.users WHERE id = 27;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from users;
++----+----------------+---------------+-------------------------+-------------+--------------------------------------------------------------+---------------------+
+| id | name           | username      | email                   | telefone    | PASSWORD                                                     | created_at          |
++----+----------------+---------------+-------------------------+-------------+--------------------------------------------------------------+---------------------+
+| 21 | Henrique Totti | henriquetotti | henriquetotti@email.com | 11993465898 | $2b$10$rBtgu0GZX6SQpQd5ClVl7Ouksh.B9yuY2D.GkhgtkBkSlCJeFvDBW | 2025-02-03 16:51:34 |
+| 22 | Paulo Cesar    | paulocesar    | paulocesar@email.com    | 11956874521 | $2b$10$KA8jd8AAfDMEwxb971yKve/JzuJT2qx90CSqeC0N8.nl18uBFuzgC | 2025-02-03 16:57:24 |
+| 23 | Ana Paula      | anapaula      | anapaula@email.com      | NULL        | $2b$10$JYtxcxXvPIKekkza13RG9Ozy2JCZA/sST2RFJiXhllrHqF7MMv2p2 | 2025-02-03 17:06:32 |
+| 26 | Marcos Sanchez | marcossanchez | marcossanchez@email.com | 11923412578 | marcos412                                                    | 2025-02-17 15:11:40 |
++----+----------------+---------------+-------------------------+-------------+--------------------------------------------------------------+---------------------+
+
+16.1-Para deletar todos os registros da tabela de clientes usamos o comando:
+mysql> DELETE FROM users;
+mysql> commit;
+
+
+30 - Conectar ao MySQL Shell:
+
+Para conectar ao MySQL Shell manualmente, você pode usar o seguinte comando no terminal (cmd, PowerShell ou bash):
+mysql -u root -p
+
+a) -u root: Especifica o usuário (troque "root" por outro usuário, se necessário).
+b) -p: Solicita a senha (digite quando for pedido).
+
+Se o MySQL estiver rodando em outro host ou porta específica:
+mysql -u root -p -h localhost -P 3306
+
+a) -h localhost: Define o host (mude para IP se for um servidor remoto).
+b) -P 3306: Define a porta (caso esteja rodando em outra porta, altere).
+
+Se estiver usando o MySQL Shell (diferente do CLI tradicional), use:
+mysqlsh
+
+E depois conecte com:
+\connect root@localhost
+
+
+31-A principal diferença entre implementar um CRUD com MySQL ou MongoDB está no modelo de dados e na forma como as consultas são 
+estruturadas. Aqui está um comparativo:
+
+1. Modelo de Dados
+
+MySQL (Relacional):
+-Usa tabelas com colunas e linhas.
+-Dados estruturados com chaves primárias e estrangeiras.
+-Relacionamentos entre entidades são feitos com JOINs.
+
+Exemplo:
+
+CREATE TABLE users (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(255),
+  email VARCHAR(255) UNIQUE,
+  age INT
+);
+
+MongoDB (NoSQL, Orientado a Documentos):
+-Usa coleções que armazenam documentos JSON (objetos).
+-Dados sem estrutura fixa (schema flexível).
+-Relacionamentos são feitos embutindo documentos ou com referências.
+
+Exemplo:
+
+{
+  "_id": ObjectId("123abc"),
+  "name": "João",
+  "email": "joao@email.com",
+  "age": 30
+}
+
+2. Operações CRUD(create, read, update e delete):
+
+Create (Inserir dados)
+MySQL:
+INSERT INTO users (name, email, age) VALUES ('João', 'joao@email.com', 30);
+MongoDB:
+db.users.insertOne({ name: "João", email: "joao@email.com", age: 30 });
+
+Read (Consultar dados)
+MySQL:
+SELECT * FROM users WHERE age > 25;
+MongoDB:
+db.users.find({ age: { $gt: 25 } });
+
+Update (Atualizar dados)
+MySQL:
+UPDATE users SET age = 31 WHERE email = 'joao@email.com';
+MongoDB:
+db.users.updateOne({ email: "joao@email.com" }, { $set: { age: 31 } });
+
+Delete (Remover dados)
+MySQL:
+DELETE FROM users WHERE email = 'joao@email.com';
+MongoDB:
+db.users.deleteOne({ email: "joao@email.com" });
+
+3. Quando usar cada um?
+
+Use MySQL se:
+Precisa de relacionamentos fortes entre dados.
+Tem dados bem estruturados e não mudam com frequência.
+Precisa de transações ACID (Atomicidade, Consistência, Isolamento, Durabilidade).
+
+Use MongoDB se:
+Precisa de escalabilidade horizontal (muitas conexões simultâneas).
+Os dados são semiestruturados e podem mudar de formato com o tempo.
+Alta velocidade de leitura/escrita sem depender de JOINs.
+
+4. Conclusão
+MySQL é melhor para sistemas estruturados (ERP, sistemas bancários).
+MongoDB é melhor para grandes volumes de dados não estruturados (logs, big data, aplicações web escaláveis).
+Se seu sistema envolve muitas consultas e grandes volumes de dados, o MongoDB pode ser mais eficiente. Se precisa de integridade e 
+estrutura rígida, o MySQL é melhor.
+
+
+
+Observação:
+1-Tipos de dados
+a) Quais são os tipos de dados apropriados para colunas como endereço, e-mail, telefone e celular, para base de dados SQL?
+
+Razão Social VARCHAR(255)
+Nome Fantasia VARCHAR(255)
+CNPJ BIGINT(14), VARCHAR(18)
+Data de Fundação DATE
+Email VARCHAR(100)
+Website VARCHAR(100)
+Telefone BIGINT(14) (Já considera números de 9 dígitos). Na dúvida, use VARCHAR
+Celular BIGINT(14) (Já considera números de 9 dígitos) Na dúvida, use VARCHAR
+Responsável VARCHAR(255), VARCHAR(100)
+Endereço VARCHAR(150)
+Endereço, número VARCHAR(20) (lembre-se: "números" podem conter outros caracteres)
+Bairro VARCHAR(50)
+Cidade VARCHAR(50)
+UF CHAR(2), TINYINT(2) (uso de números se relacionado a outra tabela)
+CEP INT(8), VARCHAR(10)
+Descrição TEXT
+
+b) Por que VARCHAR e não CHAR?
+
+VARCHAR possui um tamanho variável de acordo com o registro contido nele.
+Exemplo: Vou inserir a palavra "Yuran" que contém 5 caracteres em uma coluna VARCHAR(20) e o mesmo registro em outra coluna que é 
+CHAR(20).
+Na coluna VARCHAR vai ser utilizado apenas 5 caracteres dos 20, o tamanho daquele registro vai ser igual ao de um CHAR(5).
+Na coluna CHAR vai ser utilizado todos os 20 caracteres independente do tamanho do registro ficando com CHAR(20) e pesando mais no 
+banco.
