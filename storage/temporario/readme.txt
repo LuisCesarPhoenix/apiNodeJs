@@ -1,0 +1,1 @@
+Aqui ficam os arquivos temporários que são higienizados e enviados para o diretório finalizado. 

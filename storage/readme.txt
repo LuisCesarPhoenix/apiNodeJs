@@ -1,0 +1,1 @@
+Todos os dados dessa pasta são fakes. Foram gerados por inteligência artificial apenas para testar a aplicação
