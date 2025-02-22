@@ -208,6 +208,10 @@ mysql> SELECT * FROM users ORDER BY name asc;
 
 12-Alterar dados da tabela users:
 
+mysql> SHOW DATABASES;
+
+mysql> USE TESTE;
+
 mysql> ALTER TABLE teste.users MODIFY COLUMN password VARCHAR(200);
 mysql> ALTER TABLE users MODIFY COLUMN password VARCHAR(200);
 #Alterar tabela users modificando a coluna password para VARCHAR(200)
