@@ -185,7 +185,7 @@ PS C:\Users\cesar\onedrive\documentos\documentos b\mongodb> mongodump -d primeir
 2025-02-19T22:09:50.675-0300    done dumping primeirobanco.terceiracollection (1 document)
 
 
-Importar dados do mongodump:
+Importar dados do mongodump (muitas collections):
 Para importar os arquivos gerados do mongodump, utilizamos o mongorestore;
 O comando é o seguinte: mongorestore <diretorio>
 PS C:\Users\cesar\onedrive\documentos\documentos b\mongodb> mongorestore primeirobanco
@@ -219,6 +219,15 @@ insert query update delete getmore command dirty used flushes vsize   res qrw ar
     *0    *0     *0     *0       0     0|0  0.0% 0.0%       0 4.65G 35.0M 0|0 0|0   111b   83.6k    3 Feb 20 17:07:33.412
     *0    *0     *0     *0       0     1|0  0.0% 0.0%       0 4.65G 35.0M 0|0 0|0   112b   84.0k    3 Feb 20 17:07:34.410
     *0    *0     *0     *0       0     2|0  0.0% 0.0%       0 4.65G 35.0M 0|0 0|0   321b   84.4k    3 Feb 20 17:07:35.410
+
+
+Forma simples de remover bancos (Criar um snippet)
+No VS Code, abra a pasta em que está o banco de dados e cole seguinte script no mongoshell:
+test> Mongo().getDBNames().forEach(function(db){
+...     if(['admin', 'config', 'local'].indexOf(db) < 0){
+...         Mongo().getDB(db).dropDatabase();
+...     }
+... });
 
 
 A principal diferença entre implementar um CRUD com MySQL ou MongoDB está no modelo de dados e na forma como as consultas são 
