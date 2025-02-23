@@ -1,7 +1,7 @@
 /*
 src/config/mysqlConfig.js (Conexão MySQL sob demanda)
-Cria a conexão só quando necessário e fecha após a requisição. 
-Objetivo: Gerenciar conexões temporárias com o MySQL, garantindo que a conexão seja aberta apenas quando necessário 
+Cria a conexão só quando necessário e fecha após a requisição.
+Objetivo: Gerenciar conexões temporárias com o MySQL, garantindo que a conexão seja aberta apenas quando necessário
 e fechada após a execução da consulta.
 */
 
@@ -80,7 +80,7 @@ Resumo do Funcionamento
 5-Usa um finally para garantir que a conexão será fechada, mesmo em caso de erro.
 */
 
-/* 
+/*
 Benefícios desse código:
 Conexões otimizadas: Abre e fecha conexões sob demanda, evitando consumo desnecessário de recursos.
 Código limpo e reutilizável: Pode ser chamado de qualquer parte do projeto para executar consultas.
