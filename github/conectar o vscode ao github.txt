@@ -52,3 +52,31 @@ Dicas adicionais:
 o GitHub (por exemplo, arquivos de configuração, pastas de dependências).
 -Branches: Use branches para desenvolver novas funcionalidades ou corrigir bugs sem afetar a versão principal do seu código.
 -Pull requests: Use pull requests para revisar e discutir as alterações antes de mesclá-las à branch principal.
+
+Quando você altera vários arquivos de uma vez, pode seguir dois caminhos no VS Code para descrever cada alteração de forma clara 
+antes de fazer o commit:
+
+1 - Usando o Terminal (Manual para cada Arquivo)
+Se quiser descrever alterações separadamente para cada arquivo modificado, pode adicionar os arquivos individualmente e fazer 
+commits distintos:
+git add src/controllers/migrationController.js
+git commit -m "Corrigida conexão no migrationController.js"
+git add src/config/mongoConfig.js
+git commit -m "Refatorado método queryMongoDB para melhorar reutilização"
+git push
+
+2 - Fazendo um Commit Único com uma Mensagem Detalhada
+Se quiser fazer um único commit mas com uma descrição mais detalhada, pode usar este comando:
+git commit -m "Refatoração do código
+- Corrigida conexão no migrationController.js
+- Melhorada reutilização do queryMongoDB no mongoConfig.js
+- Ajustados logs para maior clareza"
+git push
+
+3-Usando o VS Code (Interface Gráfica)
+Abra o VS Code e clique no ícone do Git (canto esquerdo, terceiro ícone).
+Você verá a lista de arquivos modificados em "Changes".
+Clique com o botão direito no arquivo que quer commitar primeiro e selecione "Stage Changes".
+Digite uma mensagem de commit específica para aquele arquivo e clique em "Commit".
+Repita o processo para os outros arquivos, adicionando mensagens personalizadas.
+Depois, clique em "Sync Changes" (ou rode git push no terminal) para enviar os commits para o repositório remoto.
