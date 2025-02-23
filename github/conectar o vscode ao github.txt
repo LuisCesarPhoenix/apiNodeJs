@@ -80,3 +80,5 @@ Clique com o botão direito no arquivo que quer commitar primeiro e selecione "S
 Digite uma mensagem de commit específica para aquele arquivo e clique em "Commit".
 Repita o processo para os outros arquivos, adicionando mensagens personalizadas.
 Depois, clique em "Sync Changes" (ou rode git push no terminal) para enviar os commits para o repositório remoto.
+
+Pesquisar sobre merger, versionamento, pull request e como criar branch de trabalho para subir as atuaalizações.
