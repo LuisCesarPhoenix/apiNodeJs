@@ -34,7 +34,7 @@ commit" por uma mensagem descritiva.
 Passo 4: Conectar o repositório local ao repositório remoto (GitHub)
 a) Dentro do repositório que você criou no GitHub, clique no botão verde Code e copie a URL do repositório. A URL (HTTPS ou 
 SSH) do repositório termina com .git
-b) No terminal do VS Code, execute o comando git remote add origin https://github.com/LuisCesarPhoenix/apiNodeJs.git (substitua pela 
+b) No terminal do VS Code, execute o comando git remote add origin https://github.com/LuisCesarPhoenix/n8n.git (substitua pela 
 URL do seu repositório).
 
 Passo 5: Enviar os arquivos para o GitHub
@@ -81,4 +81,22 @@ Digite uma mensagem de commit específica para aquele arquivo e clique em "Commi
 Repita o processo para os outros arquivos, adicionando mensagens personalizadas.
 Depois, clique em "Sync Changes" (ou rode git push no terminal) para enviar os commits para o repositório remoto.
 
-Pesquisar sobre merger, versionamento, pull request e como criar branch de trabalho para subir as atuaalizações.
+*Pesquisar sobre merger, versionamento, pull request e como criar branch de trabalho para subir as atuaalizações.
+
+Quick setup — if you’ve done this kind of thing before
+or	
+https://github.com/LuisCesarPhoenix/n8n.git
+Get started by creating a new file or uploading an existing file. We recommend every repository include a README, LICENSE, and .gitignore.
+
+…or create a new repository on the command line
+echo "# n8n" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/LuisCesarPhoenix/n8n.git
+git push -u origin main
+…or push an existing repository from the command line
+git remote add origin https://github.com/LuisCesarPhoenix/n8n.git
+git branch -M main
+git push -u origin main
