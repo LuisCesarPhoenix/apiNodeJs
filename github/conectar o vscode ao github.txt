@@ -81,6 +81,34 @@ Digite uma mensagem de commit específica para aquele arquivo e clique em "Commi
 Repita o processo para os outros arquivos, adicionando mensagens personalizadas.
 Depois, clique em "Sync Changes" (ou rode git push no terminal) para enviar os commits para o repositório remoto.
 
+Como clonar o repositório do Github no VS Code:
+Clonar um repositório do GitHub diretamente no VS Code é uma maneira eficiente de começar a trabalhar em projetos. Aqui estão os 
+passos para realizar essa ação:
+
+1. Abra a Paleta de Comandos:
+No VS Code, pressione Ctrl + Shift + P (Windows/Linux) ou Cmd + Shift + P (Mac) para abrir a Paleta de Comandos.
+
+2. Digite "Git: Clone":
+Na Paleta de Comandos, digite "Git: Clone" e selecione a opção correspondente.
+
+3. Forneça a URL do Repositório:
+Você será solicitado a fornecer a URL do repositório Git que deseja clonar. Cole a URL do repositório GitHub que você copiou 
+anteriormente.
+
+4. Escolha o Diretório de Destino:
+Selecione a pasta onde você deseja clonar o repositório.
+
+5. Aguarde a Conclusão:
+O VS Code irá lidar com o processo de clonagem. Aguarde até que o processo seja concluído.
+O VS code irá perguntar se você deseja abrir o repositório clonado, clique em abrir.
+
+Dicas adicionais:
+Extensão Git: O VS Code possui suporte integrado para Git, mas certifique-se de que a extensão Git esteja habilitada.
+Login no Github: Se você estiver logado no github pelo VS code, ele apresentará seus repositórios para clonagem, facilitando o 
+processo.
+Terminal integrado: Você também pode usar o terminal integrado do VS Code para executar o comando git clone diretamente. Para abrir 
+o terminal, pressione Ctrl + \ (Windows/Linux) ou Cmd + \ (Mac).
+
 *Pesquisar sobre merger, versionamento, pull request e como criar branch de trabalho para subir as atuaalizações.
 
 Quick setup — if you’ve done this kind of thing before
