@@ -112,7 +112,7 @@ o terminal, pressione Ctrl + \ (Windows/Linux) ou Cmd + \ (Mac).
 *Pesquisar sobre merger, versionamento, pull request e como criar branch de trabalho para subir as atuaalizações.
 É melhor criar branches de acordo com o assunto que está alterando, por exemplo.
 
-Para criar um branch diferente você antes de fazer um git push executar o comando git branch <nome do branch> sem o sinal de <> e 
+Para criar um branch diferente, antes de fazer um git push, você executa o comando git branch <nome do branch> sem o sinal de <> e 
 depois você executa o comando git push -u origin <nome do branch>
 
 Quick setup — if you’ve done this kind of thing before
