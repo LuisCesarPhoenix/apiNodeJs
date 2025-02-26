@@ -85,6 +85,42 @@ Clique com o botão direito no arquivo que quer commitar primeiro e selecione "S
 Digite uma mensagem de commit específica para aquele arquivo e clique em "Commit".
 Repita o processo para os outros arquivos, adicionando mensagens personalizadas.
 Depois, clique em "Sync Changes" (ou rode git push no terminal) para enviar os commits para o repositório remoto.
+Observação: Porém o melhor é fazer por linha de comando.
+Usar a interface gráfica apenas para fazer commits por arqvuivo.
+
+Se quiser fazer um versionamento(controle de versões), após gerar os commits, você pode executar um dos comandos a seguir:
+
+npm version patch
+Caso seja uma versão de patch:
+v1.0.0 versão inicial
+v1.0.1 - A versão patch normalmente é usada para atualizações pequenas, correções, etc...
+
+npm version minor
+Caso seja uma versão minor:
+v1.0.0 versão inicial
+v1.1.0 - A versão minor normalmente é usada quando você adiciona alguma funcionalidade ou novo componente.
+
+npm version major
+Caso seja uma versão major:
+v1.0.0 versão inicial
+v2.0.0 - A versão major normalmente é usada para atualizações significantes, que normalmente podem modificar dependências e tornar 
+incompatível com algum outro sistema.
+
+Exemplo: a aplicação está disponível com packages compatíveis com node 20, porém você adiciona um pacote que depende do node 22, 
+isso pode acarretar em incompatibilidade com projetos que usam o node 20. Então você atualiza para a versão major.
+
+Depois de fazer um dos 3 versionamentos(npm version patch, npm version minor ou npm version major), você executa o seguinte comando:
+git push -u origin <branche criada> --tags
+
+Caso você esteja confiante na atualização, você pode enviar a nova tag direto para o master(ou main):
+git push -u origin master --tags
+
+Caso tenha algum erro, você pode voltar para a versão anterior executando o checkout:
+Exemplo: existem duas versões, a antiga(v1.0.1) e a nova(v1.0.2), caso tenha ocorrido alguma falha na v1.0.2, você executa o checkout
+na versão v1.0.1
+git checkout v1.0.1 
+Isso também pode ser usado para navegar entre os branches, então se você está na branch update e quer editar o que está na branch 
+master, você executa o git checkout master
 
 Como clonar o repositório do Github no VS Code:
 Clonar um repositório do GitHub diretamente no VS Code é uma maneira eficiente de começar a trabalhar em projetos. Aqui estão os 
@@ -119,9 +155,9 @@ o terminal, pressione Ctrl + \ (Windows/Linux) ou Cmd + \ (Mac).
 Criar branches específicas para cada funcionalidade ou correção ajuda a manter o repositório organizado e facilita a revisão de 
 código. 
 
-Para criar um branch diferente, antes de fazer um git push, você executa o comando git branch <nome do branch> sem o sinal de <>, 
-em seguida executa o comando git branch para saber qual branch está sendo usado e depois você executa o comando git push -u origin 
-<nome do branch>.
+Para criar um branch diferente, antes de fazer um git push, você executa o comando git branch nome-da-branch ou git checkout -b 
+nome-da-branch, em seguida executa o comando git branch para saber qual branch está sendo usado e depois você executa o comando git 
+push -u origin nome-da-branch.
 
 Quick setup — if you’ve done this kind of thing before
 or	
