@@ -1,7 +1,7 @@
 Passo a passo para enviar o projeto do VS Code para o GitHub e sincronizar as alterações.
 
 Pré-requisitos:
-a) Conta no GitHub: Se você ainda não tem uma, crie uma conta gratuita em github.com
+a) Conta no GitHub: Se você ainda não tem uma, crie uma conta gratuita em https://github.com
 b) Git instalado: O Git é essencial para controlar as versões do seu código. Você pode baixá-lo em https://git-scm.com/
 c) VS Code instalado: Certifique-se de ter o Visual Studio Code instalado no seu computador. Você pode baixá-lo em https://code.visualstudio.com/download
 d) Extensão GitHub: Após baixar e instalar o VS Code, instale a extensão "GitHub Pull Requests and Issues" no VS Code para facilitar 
@@ -27,9 +27,11 @@ O --global define essa configuração para todos os repositórios no seu computa
 Se quiser configurar apenas para um projeto específico, remova --global e execute dentro da pasta do projeto.
 
 Passo 3: Adicionar e commitar os arquivos
-a) Use o comando git add . para adicionar todos os arquivos do seu projeto à área de preparação do Git.
-b) Use o comando git commit -m "Mensagem inicial do commit" para criar um commit com seus arquivos. Substitua "Mensagem inicial do 
+a) Use o comando git add caminhnho-do-arq./diretório/arquivo para adicionar os arquivos do seu projeto à área de preparação do Git.
+Exemplo: git add src/controllers/migrationController.js
+b) Use o comando git commit -m "Mensagem inicial do commit" para criar um commit para cada arquivo. Substitua "Mensagem inicial do 
 commit" por uma mensagem descritiva.
+Exemplo: git commit -m "Corrigida conexão no migrationController.js"
 
 Passo 4: Conectar o repositório local ao repositório remoto (GitHub)
 a) Dentro do repositório que você criou no GitHub, clique no botão verde Code e copie a URL do repositório. A URL (HTTPS ou 
@@ -39,17 +41,19 @@ URL do seu repositório).
 
 Passo 5: Enviar os arquivos para o GitHub
 a) Use o comando git push -u origin master para enviar seus commits para o repositório remoto no GitHub. No meu caso eu usei o 
-master, mas você pode substituir pelo main.
+master, mas você pode substituir pelo main. Porém o mais indicado é criar um branch de trabalho para cada atualização.
 
 Passo 6: Sincronizar alterações futuras
 1-Sempre que você fizer alterações no seu código no VS Code:
-a) Use git add . para adicionar as alterações.
-b) Use git commit -m "Mensagem descritiva das alterações" para criar um novo commit.
+a) Use git add caminhnho-do-arq./diretório/arquivo para adicionar as alterações.
+Exemplo: git add src/config/mongoConfig.js
+b) Use o comando git commit -m "Mensagem descritiva das alterações" para criar um novo commit.
+Exemplo: git commit -m "Refatorado método queryMongoDB para melhorar reutilização"
 c) Use git push para enviar as alterações para o GitHub.
 
 Dicas adicionais:
 -Arquivo .gitignore: Crie um arquivo .gitignore na raiz do seu projeto para ignorar arquivos e pastas que você não quer enviar para 
-o GitHub (por exemplo, arquivos de configuração, pastas de dependências).
+o GitHub (por exemplo, arquivo de configuração de variáveis de ambiente(.env), pastas de dependências).
 -Branches: Use branches para desenvolver novas funcionalidades ou corrigir bugs sem afetar a versão principal do seu código.
 -Pull requests: Use pull requests para revisar e discutir as alterações antes de mesclá-las à branch principal.
 
@@ -64,6 +68,7 @@ git commit -m "Corrigida conexão no migrationController.js"
 git add src/config/mongoConfig.js
 git commit -m "Refatorado método queryMongoDB para melhorar reutilização"
 git push
+Observação: utilize o comando git status para ver o caminho de cada arquivo alterado.
 
 2 - Fazendo um Commit Único com uma Mensagem Detalhada
 Se quiser fazer um único commit mas com uma descrição mais detalhada, pode usar este comando:
@@ -109,11 +114,12 @@ processo.
 Terminal integrado: Você também pode usar o terminal integrado do VS Code para executar o comando git clone diretamente. Para abrir 
 o terminal, pressione Ctrl + \ (Windows/Linux) ou Cmd + \ (Mac).
 
-*Pesquisar sobre merger, versionamento, pull request e como criar branch de trabalho para subir as atuaalizações.
+*Pesquisar sobre merger, versionamento(controle de versões), pull request e como criar branch de trabalho para subir as atualizações.
 É melhor criar branches de acordo com o assunto que está alterando, por exemplo.
 
-Para criar um branch diferente, antes de fazer um git push, você executa o comando git branch <nome do branch> sem o sinal de <> e 
-depois você executa o comando git push -u origin <nome do branch>
+Para criar um branch diferente, antes de fazer um git push, você executa o comando git branch <nome do branch> sem o sinal de <>, 
+em seguida executa o comando git branch para saber qual branch está sendo usado e depois você executa o comando git push -u origin 
+<nome do branch>.
 
 Quick setup — if you’ve done this kind of thing before
 or	
