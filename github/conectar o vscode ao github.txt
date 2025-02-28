@@ -27,14 +27,14 @@ O --global define essa configuração para todos os repositórios no seu computa
 Se quiser configurar apenas para um projeto específico, remova --global e execute dentro da pasta do projeto.
 
 Passo 3: Adicionar e commitar os arquivos
-a) Use o comando git add caminhnho-do-arq./diretório/arquivo para adicionar os arquivos do seu projeto à área de preparação do Git.
+a) Use o comando git add caminhnho-do-arq/diretório/arquivo para adicionar os arquivos do seu projeto à área de preparação do Git.
 Exemplo: git add src/controllers/migrationController.js
 b) Use o comando git commit -m "Mensagem inicial do commit" para criar um commit para cada arquivo. Substitua "Mensagem inicial do 
 commit" por uma mensagem descritiva.
 Exemplo: git commit -m "Corrigida conexão no migrationController.js"
 
 Passo 4: Conectar o repositório local ao repositório remoto (GitHub)
-a) Dentro do repositório que você criou no GitHub, clique no botão verde Code e copie a URL do repositório. A URL (HTTPS ou 
+a) Dentro do repositório que você criou no GitHub, clique no botão verde escrito Code e copie a URL do repositório. A URL (HTTPS ou 
 SSH) do repositório termina com .git
 b) No terminal do VS Code, execute o comando git remote add origin https://github.com/LuisCesarPhoenix/n8n.git (substitua pela 
 URL do seu repositório).
@@ -55,7 +55,7 @@ Dicas adicionais:
 -Arquivo .gitignore: Crie um arquivo .gitignore na raiz do seu projeto para ignorar arquivos e pastas que você não quer enviar para 
 o GitHub (por exemplo, arquivo de configuração de variáveis de ambiente(.env), pastas de dependências).
 -Branches: Use branches para desenvolver novas funcionalidades ou corrigir bugs sem afetar a versão principal do seu código.
--Pull requests: Use pull requests para revisar e discutir as alterações antes de mesclá-las à branch principal.
+-Pull requests(Solicitação de pull): Use pull requests para revisar e discutir as alterações antes de mesclá-las à branch principal.
 
 Quando você altera vários arquivos de uma vez, pode seguir dois caminhos no VS Code para descrever cada alteração de forma clara 
 antes de fazer o commit:
@@ -70,8 +70,8 @@ git commit -m "Refatorado método queryMongoDB para melhorar reutilização"
 git push
 Observação: utilize o comando git status para ver o caminho de cada arquivo alterado.
 
-2 - Fazendo um Commit Único com uma Mensagem Detalhada
-Se quiser fazer um único commit mas com uma descrição mais detalhada, pode usar este comando:
+2 - Fazendo um Commit Único Com Uma Mensagem Detalhada
+Se quiser fazer um único commit, mas com uma descrição mais detalhada, pode usar este comando:
 git commit -m "Refatoração do código
 - Corrigida conexão no migrationController.js
 - Melhorada reutilização do queryMongoDB no mongoConfig.js
@@ -85,25 +85,26 @@ Clique com o botão direito no arquivo que quer commitar primeiro e selecione "S
 Digite uma mensagem de commit específica para aquele arquivo e clique em "Commit".
 Repita o processo para os outros arquivos, adicionando mensagens personalizadas.
 Depois, clique em "Sync Changes" (ou rode git push no terminal) para enviar os commits para o repositório remoto.
-Observação: Porém o melhor é fazer por linha de comando.
-Usar a interface gráfica apenas para fazer commits por arqvuivo.
 
 Se quiser fazer um versionamento(controle de versões), após gerar os commits, você pode executar um dos comandos a seguir:
 
-npm version patch
 Caso seja uma versão de patch:
+npm version patch
 v1.0.0 versão inicial
-v1.0.1 - A versão patch normalmente é usada para atualizações pequenas, correções, etc...
+v1.0.1 versão atualizada 
+A versão patch normalmente é usada para atualizações pequenas, correções, etc...
 
-npm version minor
 Caso seja uma versão minor:
+npm version minor
 v1.0.0 versão inicial
-v1.1.0 - A versão minor normalmente é usada quando você adiciona alguma funcionalidade ou novo componente.
+v1.1.0 versão atualizada 
+A versão minor normalmente é usada quando você adiciona alguma funcionalidade ou novo componente.
 
-npm version major
 Caso seja uma versão major:
+npm version major
 v1.0.0 versão inicial
-v2.0.0 - A versão major normalmente é usada para atualizações significantes, que normalmente podem modificar dependências e tornar 
+v2.0.0 versão atualizada 
+A versão major normalmente é usada para atualizações significantes, que normalmente podem modificar dependências e tornar 
 incompatível com algum outro sistema.
 
 Exemplo: a aplicação está disponível com packages compatíveis com node 20, porém você adiciona um pacote que depende do node 22, 
@@ -148,10 +149,10 @@ Extensão Git: O VS Code possui suporte integrado para Git, mas certifique-se de
 Login no Github: Se você estiver logado no github pelo VS code, ele apresentará seus repositórios para clonagem, facilitando o 
 processo.
 Terminal integrado: Você também pode usar o terminal integrado do VS Code para executar o comando git clone diretamente. Para abrir 
-o terminal, pressione Ctrl + \ (Windows/Linux) ou Cmd + \ (Mac).
+o terminal, pressione Ctrl + j (Windows/Linux) ou Cmd + j (Mac).
 
 *Pesquisar sobre merger, versionamento(controle de versões), pull request e como criar branch de trabalho para subir as atualizações.
-É melhor criar branches de acordo com o assunto que está alterando, por exemplo.
+É melhor criar branches de acordo com o assunto que está você alterando.
 Criar branches específicas para cada funcionalidade ou correção ajuda a manter o repositório organizado e facilita a revisão de 
 código. 
 
