@@ -12,7 +12,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 require('dotenv').config();
 
-// 🟢 Função para obter todos os usuários
+// Função para obter todos os usuários
 async function getUsers(req, res) {
   try {
     const result = await queryDatabase('SELECT id, name, username, email, telefone FROM users');
@@ -23,7 +23,7 @@ async function getUsers(req, res) {
   }
 }
 
-// 🟢 Função para obter um usuário pelo ID
+// Função para obter um usuário pelo ID
 async function getUserById(req, res) {
   const { id } = req.params;
   try {
@@ -38,27 +38,41 @@ async function getUserById(req, res) {
   }
 }
 
-// 🟢 Função para criar um novo usuário com senha criptografada
+// Função para criar um novo usuário com senha criptografada
 async function createUser(req, res) {
   const { name, username, email, telefone, password } = req.body;
+
+  // Verificação de campos obrigatórios
   if (!name || !username || !email || !telefone || !password) {
     return res.status(400).json({ error: 'Nome, username, e-mail, telefone e senha são obrigatórios' });
   }
 
   try {
+    // Verificar se o email já existe no banco
+    const existingUser = await queryDatabase('SELECT id FROM users WHERE email = ?', [email]);
+    if (existingUser.length > 0) {
+      return res.status(400).json({ error: 'E-mail já cadastrado' });
+    }
+
+    // Gerar a senha criptografada
     const hashedPassword = await bcrypt.hash(password, 10);
+    // console.log("🔑 Senha criptografada:", hashedPassword); // Apenas para debug, remova em produção
+
+    // Inserir usuário no banco
     const result = await queryDatabase(
       'INSERT INTO users (name, username, email, telefone, password) VALUES (?, ?, ?, ?, ?)',
       [name, username, email, telefone, hashedPassword]
     );
+
     res.status(201).json({ message: 'Usuário criado com sucesso', userId: result.insertId });
+
   } catch (error) {
     console.error('❌ Erro ao criar usuário:', error);
     res.status(500).json({ error: 'Erro ao criar usuário' });
   }
 }
 
-// 🟢 Função para atualizar um usuário dinamicamente
+// Função para atualizar um usuário dinamicamente
 async function updateUser(req, res) {
   const { id } = req.params;
   const fields = req.body;
@@ -90,7 +104,7 @@ async function updateUser(req, res) {
   }
 }
 
-// 🟢 Função para deletar um usuário
+// Função para deletar um usuário
 async function deleteUser(req, res) {
   const { id } = req.params;
   try {
@@ -106,7 +120,7 @@ async function deleteUser(req, res) {
   }
 }
 
-// 🟢 Função para autenticar usuário e gerar token JWT
+// Função para autenticar usuário e gerar token JWT
 async function loginUser(req, res) {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -114,31 +128,55 @@ async function loginUser(req, res) {
   }
 
   try {
-    const result = await queryDatabase('SELECT * FROM users WHERE email = ?', [email]);
+    // Buscar usuário no banco sem expor todos os campos
+    const result = await queryDatabase(
+      'SELECT id, name, email, telefone, password FROM users WHERE email = ?',
+      [email]
+    );
+
     if (result.length === 0) {
-      return res.status(400).json({ error: 'Usuário não encontrado' });
+      return res.status(400).json({ error: 'Credenciais inválidas' }); // Segurança!
     }
 
     const user = result[0];
+		console.log("Senha enviada pelo usuário:", password); /* */
+		console.log("Senha salva no banco:", user.password); /* */
+
+    // Comparação de senha segura
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ error: 'Senha incorreta' });
+      return res.status(400).json({ error: 'Credenciais inválidas' });
     }
 
-    const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.json({ message: 'Login efetuado com sucesso', user: { id: user.id, name: user.name, email: user.email }, token });
+    // Gerar token JWT seguro
+    const token = jwt.sign(
+      { id: user.id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    // Retornar dados seguros (REMOVIDA a senha)
+    res.json({
+      message: 'Login efetuado com sucesso',
+      user: { id: user.id, name: user.name, email: user.email, telefone: user.telefone },
+      token,
+    });
+
   } catch (error) {
     console.error('❌ Erro ao autenticar usuário:', error);
     res.status(500).json({ error: 'Erro no servidor' });
   }
 }
 
-// 🟢 Middleware para verificar token JWT
+// Middleware para verificar token JWT
 function authenticateToken(req, res, next) {
-  const token = req.header('Authorization');
-  if (!token) return res.status(401).json({ error: 'Acesso negado' });
+  const authHeader = req.header('Authorization');
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ error: 'Acesso negado' });
+  }
 
   try {
+    const token = authHeader.split(" ")[1]; // Remove "Bearer "
     const verified = jwt.verify(token, process.env.JWT_SECRET);
     req.user = verified;
     next();

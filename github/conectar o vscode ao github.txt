@@ -26,18 +26,18 @@ Observação:
 O --global define essa configuração para todos os repositórios no seu computador.
 Se quiser configurar apenas para um projeto específico, remova --global e execute dentro da pasta do projeto.
 
-Passo 3: Adicionar e commitar os arquivos
+Passo 3: Conectar o repositório local ao repositório remoto (GitHub)
+a) Dentro do repositório que você criou no GitHub, clique no botão verde escrito Code e copie a URL do repositório. A URL (HTTPS ou 
+SSH) do repositório termina com .git
+b) No terminal do VS Code, execute o comando git remote add origin https://github.com/LuisCesarPhoenix/n8n-com-docker.git (substitua 
+pela URL do seu repositório).
+
+Passo 4: Adicionar e commitar os arquivos
 a) Use o comando git add caminhnho-do-arq/diretório/arquivo para adicionar os arquivos do seu projeto à área de preparação do Git.
 Exemplo: git add src/controllers/migrationController.js
 b) Use o comando git commit -m "Mensagem inicial do commit" para criar um commit para cada arquivo. Substitua "Mensagem inicial do 
 commit" por uma mensagem descritiva.
 Exemplo: git commit -m "Corrigida conexão no migrationController.js"
-
-Passo 4: Conectar o repositório local ao repositório remoto (GitHub)
-a) Dentro do repositório que você criou no GitHub, clique no botão verde escrito Code e copie a URL do repositório. A URL (HTTPS ou 
-SSH) do repositório termina com .git
-b) No terminal do VS Code, execute o comando git remote add origin https://github.com/LuisCesarPhoenix/n8n.git (substitua pela 
-URL do seu repositório).
 
 Passo 5: Enviar os arquivos para o GitHub
 a) Use o comando git push -u origin master para enviar seus commits para o repositório remoto no GitHub. No meu caso eu usei o 
