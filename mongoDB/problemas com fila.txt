@@ -1,0 +1,156 @@
+O que está acontecendo nas consultas é que o sistema está lendo uma linha de cada vez do arquivo, e cada linha que ele lê, ele faz 
+uma consulta no banco e aguarda a resposta, depois que recebeu a resposta, ele pega a próxima linha e consulta de novo. Só que essa 
+não é a forma mais eficiente porque demora mais tempo, pois, ele vai ter que esperar o retorno para cada requisição.
+
+Isso acaba deixando a conexão muito tempo aberta com os outros serviços que estão rodando. O ideal seria, por exemplo, pegar 10 mil 
+linhas por vez, fazer a consulta no banco, retornar a resposta dessas 10 mil linhas e ir para as próximas 10 mil linhas. Essa seria 
+a forma mais eficiente, porque eu ia estar quebrando o tempo de resposta de linha por linha para um tempo de resposta de 10 mil 
+linhas de uma vez. Preciso fazer a consulta com ao menos 1000 cpf, mas com email junto. Gerar um json com a consulta de 1000 CPF e 
+filtrar os resultados que bater com email e telefone(Um json com uma array de objetos cpf, email e telefone).
+
+Aí eu não ficaria com os outros serviços com conexão aberta o tempo todo esperando, como o RabbitMQ, por exemplo. Isso é uma das 
+coisas que está quebrando o sistema porque quando passa um certo tempo de conexão aberta com o RabbitMQ também, ele vai cancelar a 
+conexão e aí o arquivo quebra no meio. Isso acaba tendo que limitar bastante o tamanho dos arquivos.
+
+Estou conseguindo fazer até no máximo 5 mil linhas de consulta, uma por vez. Eu preciso que me ajude a achar um jeito de acumular, 
+por exemplo, o CPF de cada linha junto com o e-mail e fazer a consulta agregada no MongoDB de uma array com vários CPFs e vários 
+e-mails. Eu sei que é possível fazer uma consulta só com o CPF, com vários CPFs ao mesmo tempo.
+
+Agora, fazer a consulta com o CPF, agregando o telefone e agregando o e-mail para retornar valores mais filtrados, eu não sei como 
+fazer isso no MongoDB. A outra forma que eu pensei em fazer é consultar vários CPFs depois que eu receber a resposta, fazer a 
+filtragem daqueles que batem com o CPF e-mail da linha ou o CPF, por exemplo, é fazer aquela volta toda para poder filtrar e validar 
+de uma forma melhor.
+
+O problema é que talvez acabe gerando muito tempo para a consulta. E eu preciso de uma solução para isso também.
+
+Eu preciso de alguma ideia, por exemplo, pegar e acumular 1000 linhas do CSV, acumular o CPF, o e-mail da pessoa e depois 
+enviar uma consulta grande dessa direto, tipo uma Array com esses dados, e o MongoDB trazer o resultado já comparando. Se não vai 
+ter que fazer uma consulta só dos CPFs, quando retornar a consulta, pegar esses dados, salvar em algum lugar, depois fazer uma 
+comparação para poder localizá-los, no caso, validar se o CPF está correto, fazer uma comparação junto com o e-mail, para ver se 
+bate com o que eu tenho no banco de dados, e retornar o resultado no documento CSV novo.
+
+O projeto utiliza o mongoDB, javascrit, node.js, rabbitMQ para gerenciar as filas e um servidor remoto que armazena os arquivos que 
+vão ser consultados e receber os arquivos novos validados.
+
+Otimizar isso ajuda evitar conexões longas e melhorar a performance. Algumas ideias que podem resolver o problema:
+
+Estratégia de Processamento em Lotes (Batch Processing):
+-Em vez de consultar linha por linha, você pode acumular um lote de 1000 ou 10.000 linhas antes de enviar a consulta ao MongoDB. Isso 
+reduziria drasticamente o número de conexões e requisições.
+
+1-Acumular Dados em Lotes
+a)Ler o CSV em chunks de 1000 ou 10.000 linhas.
+b)Extrair apenas CPF, email e telefone e armazenar num array temporário.
+
+2-Consulta em Massa no MongoDB
+-Criar um query que busca múltiplos CPFs de uma vez:
+
+const result = await db.collection("usuarios").find({
+  cpf: { $in: listaDeCPFs },
+  email: { $in: listaDeEmails }
+}).toArray();
+
+-Isso retorna todos os documentos onde o CPF ou o email estão no banco.
+
+3-Filtragem dos Resultados
+-Comparar os resultados retornados com os dados originais para garantir correspondência exata.
+
+Estratégia de Redis para Cache (Opcional):
+-Se muitas consultas repetem os mesmos CPFs, usar um cache como Redis pode reduzir a carga do banco.
+a)Antes de consultar no MongoDB, verifica no Redis se já há dados sobre o CPF.
+b)Se houver, usa os dados do Redis. Se não, busca no MongoDB e armazena no Redis para futuras consultas.
+
+Uso de RabbitMQ com Acks Inteligentes:
+-Em vez de processar linha por linha no RabbitMQ, você pode:
+a)Criar mensagens de lotes com 1000 registros.
+b)Processar a mensagem e enviar o resultado antes de pegar o próximo lote.
+c)Confirmar (ack) a mensagem apenas quando o lote for concluído.
+-Isso evita que o RabbitMQ cancele conexões por timeout.
+
+Como eu faço uma consulta agregando cpf, telefone e e-mail para retornar valores mais filtrados?
+-Para garantir que o MongoDB retorne apenas os documentos onde o CPF, o e-mail e o telefone coincidem corretamente, 
+precisamos estruturar a consulta de forma que todos os campos sejam considerados na filtragem.
+
+Consulta Agregada no MongoDB (CPF + Email + Telefone):
+-O problema da consulta com ($in com CPF e e-mail) é que ela pode retornar documentos onde apenas um dos critérios é atendido 
+(exemplo: CPF bate, mas o e-mail não).
+-Para garantir que todos os campos correspondam exatamente, podemos usar o operador $or e $and.
+
+Solução 1 - Consulta Exata com $and
+-Se você quiser que CPF, e-mail e telefone coincidam exatamente, use $and:
+
+const result = await db.collection("usuarios").find({
+  $and: [
+    { cpf: { $in: listaDeCPFs } },
+    { email: { $in: listaDeEmails } },
+    { telefone: { $in: listaDeTelefones } }
+  ]
+}).toArray();
+
+Como funciona?
+a)A consulta busca documentos onde CPF, e-mail e telefone estão dentro das listas correspondentes.
+b)Isso retorna apenas os registros que têm as três informações correspondentes.
+c)Limitação: Se um CPF está correto, mas o e-mail não bate, o registro não será retornado.
+
+Solução 2 - Busca por CPF e Filtragem Manual
+-Caso os dados no banco estejam misturados (exemplo: um CPF pode ter vários e-mails cadastrados), pode ser mais eficiente buscar 
+apenas pelos CPFs e depois filtrar os resultados manualmente.
+
+const result = await db.collection("usuarios").find({
+  cpf: { $in: listaDeCPFs }
+}).toArray();
+
+Agora, filtramos os resultados em memória:
+
+const dadosFiltrados = result.filter(user => 
+  listaDeEmails.includes(user.email) && 
+  listaDeTelefones.includes(user.telefone)
+);
+
+Como funciona?
+1-O MongoDB retorna todos os registros onde o CPF bate.
+2-Depois, no código, filtramos os dados para garantir que o e-mail e telefone também são compatíveis.
+
+Vantagens:
+
+-Menos carga no MongoDB, pois buscamos só por CPF.
+-Mais flexibilidade para validar os dados em Node.js.
+-Evita falsos negativos, pois podemos aplicar mais lógica no filtro.
+
+Solução 3 - Agregação no MongoDB (Mais Flexível)
+Se os dados forem grandes e for necessário processar tudo dentro do MongoDB, podemos usar Aggregation Pipeline:
+
+const result = await db.collection("usuarios").aggregate([
+  {
+    $match: {
+      cpf: { $in: listaDeCPFs }
+    }
+  },
+  {
+    $match: {
+      email: { $in: listaDeEmails },
+      telefone: { $in: listaDeTelefones }
+    }
+  }
+]).toArray();
+
+Como funciona?
+
+1-Primeiro, filtramos os CPFs ($match).
+2-Depois, filtramos novamente por e-mail e telefone.
+
+Vantagens:
+a)Todo o processamento acontece dentro do MongoDB.
+b)Mais eficiente do que buscar tudo e filtrar em Node.js.
+c)Útil para grandes volumes de dados.
+
+Estratégia	                                       Quando Usar?	                                              Desempenho
+A)$and com CPF, e-mail e telefone -> Se os dados são bem estruturados e precisam bater exatamente -> Rápida, mas pode não encontrar 
+alguns registros
+B)Buscar só por CPF e filtrar em Node.js -> Se um CPF pode ter vários e-mails e telefones cadastrados	-> Mais flexível, mas pode 
+consumir mais RAM
+C)Aggregation Pipeline($match) -> Se os dados forem grandes e precisar processar tudo no banco -> Melhor desempenho para grandes 
+volumes
+
+Se você já tem muitos CPFs e quer processar tudo no MongoDB, o mais recomendado é a solução 3 (Aggregation Pipeline).
+
