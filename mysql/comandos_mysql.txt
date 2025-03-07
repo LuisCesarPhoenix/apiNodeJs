@@ -1,6 +1,6 @@
 1-Criar banco de dados se não existir:
 mysql> CREATE DATABASE IF NOT EXISTS teste;
-Query OK, 1 row affected (0.04 sec)
+
 
 
 2-trocar para o banco de dados teste:
@@ -8,9 +8,10 @@ mysql> use teste;
 Database changed
 
 
+
 3-Criar tabela no banco de dados teste:
-mysql> CREATE TABLE teste.users(
-mysql> CREATE TABLE USERS(
+mysql> CREATE TABLE teste.users( // Pode ser assim
+mysql> CREATE TABLE USERS( // ou assim
 mysql> id int auto_increment,
 mysql> name varchar(100) not null,
 mysql> username varchar(100) not null unique,
@@ -18,6 +19,7 @@ mysql> email varchar(100) not null unique,
 mysql> password varchar(20) not null,
 mysql> primary key(id)
 mysql> );
+
 
 
 4-Mostrar a estrutura da tabela:
@@ -35,6 +37,7 @@ mysql> describe teste.users;
 +------------+--------------+------+-----+-------------------+-------------------+
 
 
+
 5-Mostrar todos os bancos de dados:
 mysql> show databases;
 +--------------------+
@@ -49,6 +52,7 @@ mysql> show databases;
 | teste2             |
 | world              |
 +--------------------+
+
 
 
 6-Mostrar todos os dados da tabela:
@@ -99,36 +103,45 @@ mysql> SELECT name as Nome, telefone as Tel, username as Nome_Usuario FROM users
 | Marcos Sanchez | 11923412578 | marcossanchez |
 +----------------+-------------+---------------+
 
+6.5-Mostrar os campos name como nome, username como 'nome de usuário' e created_at como data_de_criacao:
+mysql> select id, name nome, username 'nome de usuário', email, telefone, created_at data_de_criacao from teste.users;
++----+-------------------------+--------------------+--------------------------+-------------+---------------------+
+| id | nome                    | nome de usuário    | email                    | telefone    | data_de_criacao     |
++----+-------------------------+--------------------+--------------------------+-------------+---------------------+
+| 21 | Henrique Totti          | henriquetotti      | henriquetotti@email.com  | 11993465898 | 2025-02-03 16:51:34 |
+| 22 | Paulo Cesar             | paulocesar         | paulocesar@email.com     | 11956874521 | 2025-02-03 16:57:24 |
+| 30 | Ana Izabelli Atualizado | izabelliatualizado | anaizabelli@email.com    | 11993547898 | 2025-02-21 03:34:10 |
+| 33 | Temporário              | jafoi              | temp@email.com           | 11993465898 | 2025-02-25 19:33:46 |
+| 34 | Alexandre Pirez         | alexandrepirez     | alexandrepirez@email.com | 11956233265 | 2025-02-28 17:47:29 |
++----+-------------------------+--------------------+--------------------------+-------------+---------------------+
+
+
 
 7-Inserir dados na tabela users:
 mysql> INSERT INTO teste.users(name, username, email, password)
 mysql> INSERT INTO users(name, username, email, password)
-    -> VALUES ("Roberto Carlos", "robertocarlos", "robertocarlos@mail.com", "roberto654");
-Query OK, 1 row affected (0.03 sec)
-
+    -> VALUES ("Roberto Carlos", "robertocarlos", "robertocarlos@email.com", "roberto654");
+	
 mysql> select * from users;
 mysql> select * from teste.users;
-+----+----------------+---------------+------------------------+--------------------------------------------------------------+---------------------+
-| id | name           | username      | email                  | PASSWORD                                                     | created_at          |
-+----+----------------+---------------+------------------------+--------------------------------------------------------------+---------------------+
-| 21 | Luiz Soarez    | luizsoarez    | luizsoarez@email.com   | $2b$10$rBtgu0GZX6SQpQd5ClVl7Ouksh.B9yuY2D.GkhgtkBkSlCJeFvDBW | 2025-02-03 16:51:34 |
-| 22 | Paulo Cesar    | paulocesar    | paulocesar@email.com   | $2b$10$KA8jd8AAfDMEwxb971yKve/JzuJT2qx90CSqeC0N8.nl18uBFuzgC | 2025-02-03 16:57:24 |
-| 23 | Ana Paula      | anapaula      | anapaula@email.com     | $2b$10$JYtxcxXvPIKekkza13RG9Ozy2JCZA/sST2RFJiXhllrHqF7MMv2p2 | 2025-02-03 17:06:32 |
-| 25 | Roberto Carlos | robertocarlos | robertocarlos@mail.com | roberto654                                                   | 2025-02-17 12:16:59 |
-+----+----------------+---------------+------------------------+--------------------------------------------------------------+---------------------+
++----+----------------+---------------+-------------------------+--------------------------------------------------------------+---------------------+
+| id | name           | username      | email                   | PASSWORD                                                     | created_at          |
++----+----------------+---------------+-------------------------+--------------------------------------------------------------+---------------------+
+| 21 | Luiz Soarez    | luizsoarez    | luizsoarez@email.com    | $2b$10$rBtgu0GZX6SQpQd5ClVl7Ouksh.B9yuY2D.GkhgtkBkSlCJeFvDBW | 2025-02-03 16:51:34 |
+| 22 | Paulo Cesar    | paulocesar    | paulocesar@email.com    | $2b$10$KA8jd8AAfDMEwxb971yKve/JzuJT2qx90CSqeC0N8.nl18uBFuzgC | 2025-02-03 16:57:24 |
+| 23 | Ana Paula      | anapaula      | anapaula@email.com      | $2b$10$JYtxcxXvPIKekkza13RG9Ozy2JCZA/sST2RFJiXhllrHqF7MMv2p2 | 2025-02-03 17:06:32 |
+| 25 | Roberto Carlos | robertocarlos | robertocarlos@email.com | roberto654                                                   | 2025-02-17 12:16:59 |
++----+----------------+---------------+-------------------------+--------------------------------------------------------------+---------------------+
 
-Se você quiser inserir em todos os campos da tabela, não é necessário descrever quais serão preenchidos. Apenas não se esqueça de 
-conferir se os valores estão na sequência correta. O SGBD subentende que todos os campos serão preenchidos.
-
+Se você quiser inserir em todos os campos da tabela, não é necessário descrever quais campos serão preenchidos. Apenas não se esqueça 
+de conferir se os valores estão na sequência correta. O SGBD subentende que todos os campos serão preenchidos.
 
 7.1-Inserir múltiplos usuários de uma vez na tabela users:
 mysql> INSERT INTO teste.users (name, username, email, telefone, password)
 mysql> INSERT INTO users (name, username, email, telefone, password)
     -> VALUES ("Marcos Sanchez", "marcossanchez", "marcossanchez@email.com", "11923412578", "marcos412"),
     -> ("Paula Gludovatz", "paulagludovatz", "paulagludovatz@email.com", "11957892773", "gludovatz741");
-Query OK, 2 rows affected (0.01 sec)
-Records: 2  Duplicates: 0  Warnings: 0
-
+	
 mysql> select * from users;
 mysql> select * from teste.users;
 +----+-----------------+----------------+--------------------------+-------------+--------------------------------------------------------------+---------------------+
@@ -140,6 +153,7 @@ mysql> select * from teste.users;
 | 26 | Marcos Sanchez  | marcossanchez  | marcossanchez@email.com  | 11923412578 | marcos412                                                    | 2025-02-17 15:11:40 |
 | 27 | Paula Gludovatz | paulagludovatz | paulagludovatz@email.com | 11957892773 | gludovatz741                                                 | 2025-02-17 15:11:40 |
 +----+-----------------+----------------+--------------------------+-------------+--------------------------------------------------------------+---------------------+
+
 
 
 8-Deletar dados da tabela users:
@@ -156,12 +170,11 @@ mysql> select * from users;
 +----+-------------+------------+----------------------+--------------------------------------------------------------+---------------------+
 
 
+
 9-Atualizar dados da tabela:
 mysql> UPDATE teste.users SET name = "Henrique Totti" , username = "henriquetotti" , email = "henriquetotti@email.com" WHERE id = 21;
 mysql> UPDATE users SET name = "Henrique Totti" , username = "henriquetotti" , email = "henriquetotti@email.com" WHERE id = 21;
 mysql> commit;
-Query OK, 1 row affected (0.01 sec)
-Rows matched: 1  Changed: 1  Warnings: 0
 
 mysql> select * from users;
 mysql> select * from teste.users;
@@ -176,8 +189,6 @@ mysql> select * from teste.users;
 9.1-Atualizar dados da tabela:
 mysql> update teste.users set telefone = 11956874521 where name = "Paulo Cesar";
 mysql> update users set telefone = 11956874521 where name = "Paulo Cesar";
-Query OK, 1 row affected (0.01 sec)
-Rows matched: 1  Changed: 1  Warnings: 0
 
 mysql> select * from teste.users;
 mysql> select * from users;
@@ -190,11 +201,13 @@ mysql> select * from users;
 +----+----------------+---------------+-------------------------+-------------+--------------------------------------------------------------+---------------------+
 
 
+
 10-	limpar o terminal:
 mysql> \! cls
 
 
-11-Order By (Ordenar por asc ou desc):
+
+11-A cláusula ORDER BY retorna os dados em ordem ascendente(ASC) ou descendente(DESC):
 mysql> SELECT * FROM teste.users ORDER BY name desc;
 mysql> SELECT * FROM users ORDER BY name asc;
 +----+----------------+---------------+-------------------------+--------------------------------------------------------------+---------------------+
@@ -206,7 +219,8 @@ mysql> SELECT * FROM users ORDER BY name asc;
 +----+----------------+---------------+-------------------------+--------------------------------------------------------------+---------------------+
 
 
-12-Alterar dados da tabela users:
+
+12-Alterar campos e tipos de dados da tabela users:
 
 mysql> SHOW DATABASES;
 
@@ -232,8 +246,6 @@ registro foi inserido na tabela.
 */
 
 mysql> ALTER TABLE teste.users CHANGE username username VARCHAR(19) NOT NULL;
-Query OK, 3 rows affected (0.11 sec)
-Records: 3  Duplicates: 0  Warnings: 0
 
 mysql> describe users;
 +------------+--------------+------+-----+-------------------+-------------------+
@@ -249,8 +261,6 @@ mysql> describe users;
 
 mysql> ALTER TABLE teste.users ADD telefone VARCHAR(20) AFTER email;
 mysql> ALTER TABLE users ADD telefone VARCHAR(20) AFTER email;
-Query OK, 0 rows affected (0.02 sec)
-Records: 0  Duplicates: 0  Warnings: 0
 
 mysql> describe teste.users;
 mysql> describe users;
@@ -267,10 +277,9 @@ mysql> describe users;
 +------------+--------------+------+-----+-------------------+-------------------+
 
 
+
 13-Apagar banco de dados:
 mysql> DROP DATABASE teste2;
-Query OK, 0 rows affected (0.04 sec)
-
 mysql> show databases;
 +--------------------+
 | Database           |
@@ -286,6 +295,7 @@ mysql> show databases;
 +--------------------+
 
 
+
 14-Mostrar tabelas no banco de dados:
 mysql> use teste;
 Database changed
@@ -297,6 +307,7 @@ mysql> show tables;
 +-----------------+
 
 
+
 15-Apagar tabela do banco de dados teste;
 mysql> show tables;
 +-----------------+
@@ -305,16 +316,14 @@ mysql> show tables;
 | contatos        |
 | users           |
 +-----------------+
-
 mysql> DROP TABLE contatos;
-Query OK, 0 rows affected (0.03 sec)
-
 mysql> show tables;
 +-----------------+
 | Tables_in_teste |
 +-----------------+
 | users           |
 +-----------------+
+
 
 
 16-Para deletar algum registro usamos a instrução SQL DELETE. Diferente do DROP, ele deleta os registros das colunas do banco de 
@@ -331,7 +340,6 @@ mysql> select * from users;
 +----+-----------------+----------------+--------------------------+-------------+--------------------------------------------------------------+---------------------+
 
 mysql> DELETE FROM teste.users WHERE id = 27;
-Query OK, 1 row affected (0.02 sec)
 
 mysql> select * from users;
 +----+----------------+---------------+-------------------------+-------------+--------------------------------------------------------------+---------------------+
@@ -343,9 +351,163 @@ mysql> select * from users;
 | 26 | Marcos Sanchez | marcossanchez | marcossanchez@email.com | 11923412578 | marcos412                                                    | 2025-02-17 15:11:40 |
 +----+----------------+---------------+-------------------------+-------------+--------------------------------------------------------------+---------------------+
 
-16.1-Para deletar todos os registros da tabela de clientes usamos o comando:
+16.1-Para deletar todos os registros da tabela users usamos o comando:
 mysql> DELETE FROM users;
 mysql> commit;
+
+
+
+17-A cláusula DISTINCT retorna apenas uma linha de dados para todo o grupo de linhas que tenha o mesmo valor. Ela só retorna as 
+linhas com valores distintos.
+mysql> SELECT DISTINCT name FROM teste.users;
++-------------------------+
+| name                    |
++-------------------------+
+| Henrique Totti          |
+| Paulo Cesar             |
+| Ana Izabelli Atualizado |
+| Temporário              |
+| Alexandre Pirez         |
+| Henrique Martinz        |
++-------------------------+
+
+
+
+18-A cláusula ALL é o oposto de DISTINCT, pois retorna todos os dados, mesmo que tenha valores iguais:
+mysql> SELECT ALL name FROM teste.users;
++-------------------------+
+| name                    |
++-------------------------+
+| Henrique Totti          |
+| Paulo Cesar             |
+| Ana Izabelli Atualizado |
+| Temporário              |
+| Alexandre Pirez         |
+| Henrique Martinz        |
++-------------------------+
+
+
+
+19-A cláusula LIMIT [início, linhas] retorna o número de linhas especificado. Se o valor início for fornecido, aquelas linhas são 
+puladas antes do dado ser retornado. Lembre-se que a primeira linha é 0.
+
+a)Retorna todas as linhas:
+mysql> select id, name nome, username 'nome de usuário', email, telefone, created_at data_de_criacao from teste.users;
++----+-------------------------+--------------------+---------------------------+-------------+---------------------+
+| id | nome                    | nome de usuário    | email                     | telefone    | data_de_criacao     |
++----+-------------------------+--------------------+---------------------------+-------------+---------------------+
+| 21 | Henrique Totti          | henriquetotti      | henriquetotti@email.com   | 11993465898 | 2025-02-03 16:51:34 |
+| 22 | Paulo Cesar             | paulocesar         | paulocesar@email.com      | 11956874521 | 2025-02-03 16:57:24 |
+| 30 | Ana Izabelli Atualizado | izabelliatualizado | anaizabelli@email.com     | 11993547898 | 2025-02-21 03:34:10 |
+| 34 | Alexandre Pirez         | alexandrepirez     | alexandrepirez@email.com  | 11956233265 | 2025-02-28 17:47:29 |
+| 35 | Henrique Martinz        | henriquemartinz    | henriquemartinz@email.com | 11956548987 | 2025-03-04 02:00:45 |
++----+-------------------------+--------------------+---------------------------+-------------+---------------------+
+
+b)Retorna as primeiras 3 linhas: 
+mysql> select id, name nome, username 'nome de usuário', email, telefone, created_at data_de_criacao from teste.users limit 3;
++----+-------------------------+--------------------+-------------------------+-------------+---------------------+
+| id | nome                    | nome de usuário    | email                   | telefone    | data_de_criacao     |
++----+-------------------------+--------------------+-------------------------+-------------+---------------------+
+| 21 | Henrique Totti          | henriquetotti      | henriquetotti@email.com | 11993465898 | 2025-02-03 16:51:34 |
+| 22 | Paulo Cesar             | paulocesar         | paulocesar@email.com    | 11956874521 | 2025-02-03 16:57:24 |
+| 30 | Ana Izabelli Atualizado | izabelliatualizado | anaizabelli@email.com   | 11993547898 | 2025-02-21 03:34:10 |
++----+-------------------------+--------------------+-------------------------+-------------+---------------------+
+
+c)Retorna 2 linhas começando na primeira linha(0):
+mysql> select id, name nome, username 'nome de usuário', email, telefone, created_at data_de_criacao from teste.users limit 0,2;
++----+----------------+-----------------+-------------------------+-------------+---------------------+
+| id | nome           | nome de usuário | email                   | telefone    | data_de_criacao     |
++----+----------------+-----------------+-------------------------+-------------+---------------------+
+| 21 | Henrique Totti | henriquetotti   | henriquetotti@email.com | 11993465898 | 2025-02-03 16:51:34 |
+| 22 | Paulo Cesar    | paulocesar      | paulocesar@email.com    | 11956874521 | 2025-02-03 16:57:24 |
++----+----------------+-----------------+-------------------------+-------------+---------------------+
+
+d)Retorna somente um(1) registro que é o que está na quarta linha(3):
+mysql> select id, name nome, username 'nome de usuário', email, telefone, created_at data_de_criacao from teste.users limit 3,1;
++----+-----------------+-----------------+--------------------------+-------------+---------------------+
+| id | nome            | nome de usuário | email                    | telefone    | data_de_criacao     |
++----+-----------------+-----------------+--------------------------+-------------+---------------------+
+| 34 | Alexandre Pirez | alexandrepirez  | alexandrepirez@email.com | 11956233265 | 2025-02-28 17:47:29 |
++----+-----------------+-----------------+--------------------------+-------------+---------------------+
+
+
+
+20-Para incrementar as consultas podemos usar algumas funções:
+a)A função ABS retorna o valor absoluto do número, ou seja, só considera a parte numérica, não se importando com o sinal de positivo 
+ou negativo do mesmo. Por exemplo: ABS(-145) retorna 145;
+b)A função BIN considera o binário de número decimal. Por exemplo: BIN(8) retorna 1000;
+c)A função CURDATE() / CURRENTDATE() retorna a data atual na forma YYYY/MM/DD. Por exemplo: CURDATE() retorna 2002/04/04;
+d)A função CURTIME() / CURRENTTIME() retorna a hora atual na forma HH:MM:SS. Por exemplo: CURTIME() retorna 13:02:43;
+e)A função DATABASE retorna o nome do banco de dados atual: Por exemplo: DATABASE() retorna teste;
+f)A função DAYOFMONTH retorna o dia do mês para a data dada, na faixa de 1 a 31. Por exemplo: DAYOFMONTH("2004-04-04") retorna 04;
+g)A função DAYNAME retorna o dia da semana para a data dada. Por exemplo: DAYNAME("2004-04-04") retorna Sunday;
+h)A função DAYOFWEEK retorna o dia da semana em número para a data dada, na faixa de 1 a 7, onde o 1 é domingo. Por exemplo: 
+DAYOFWEEK("2004-04-04") retorna 1;
+i)A função DAYOFYEAR retorna o dia do ano para a data dada, na faixa de 1 até 366. Por exemplo: DAYOFYEAR("2004-04-04") retorna 95;
+j)A função FORMAT(NÚMERO, DECIMAIS) formata o número nitidamente com o número de decimais dado. Por exemplo: FORMAT(5543.00245,2) 
+retorna 5.543.002,45
+k)A função LIKE merece um destaque especial, pois faz uma busca sofisticada por uma substring dentro de uma string informada. Temos, 
+dentro da função LIKE, os seguintes caracteres especiais utilizados em substrings:
+%: busca zero ou mais caracteres;
+_: busca somente um caractere.
+
+Exemplos:
+
+a)O caractere "%" nessa consulta indica que estamos procurando nomes que possuem a inicial H:
+mysql> SELECT name as nome From teste.users Where name like "H%";
++------------------+
+| nome             |
++------------------+
+| Henrique Totti   |
+| Henrique Martinz |
++------------------+
+
+b)O caractere "_" na consulta indica que estamos procurando nomes nos quais a letra L é a segunda letra do nome:
+mysql> SELECT name as nome From teste.users Where name like "_l%";
++-----------------+
+| nome            |
++-----------------+
+| Alexandre Pirez |
++-----------------+
+
+c)O caractere "%" nessa consulta indica que estamos procurando nomes que terminam com a letra Z:
+mysql> SELECT name as nome From teste.users Where name like "%z";
++------------------+
+| nome             |
++------------------+
+| Alexandre Pirez  |
+| Henrique Martinz |
++------------------+
+
+
+
+21-Outra função importante para retorno de consultas é o Left, que retorna os primeiros caracteres à esquerda de uma string. 
+A consulta a seguir retornará os três primeiros caracteres à esquerda dos registros da coluna name:
+mysql> SELECT LEFT(name,3) as nome from teste.users;
++------+
+| nome |
++------+
+| Hen  |
+| Pau  |
+| Ana  |
+| Ale  |
+| Hen  |
++------+
+
+
+
+22-A função Right é semelhante a função Left, mas esta retorna os últimos caracteres à direita de uma string.
+A consulta a seguir retorna os quatro últimos caracteres à direita dos nomes da tabela users:
+mysql> SELECT RIGHT(name,4) as nome From teste.users;
++------+
+| nome |
++------+
+| otti |
+| esar |
+| zado |
+| irez |
+| tinz |
++------+
 
 
 30 - Conectar ao MySQL Shell:
@@ -372,7 +534,7 @@ E depois conecte com:
 31-A principal diferença entre implementar um CRUD com MySQL ou MongoDB está no modelo de dados e na forma como as consultas são 
 estruturadas. Aqui está um comparativo:
 
-1. Modelo de Dados
+a)Modelo de Dados
 
 MySQL (Relacional):
 -Usa tabelas com colunas e linhas.
@@ -402,33 +564,25 @@ Exemplo:
   "age": 30
 }
 
-2. Operações CRUD(create, read, update e delete):
+b)Operações CRUD(create, read, update e delete):
 
 Create (Inserir dados)
-MySQL:
-INSERT INTO users (name, email, age) VALUES ('João', 'joao@email.com', 30);
-MongoDB:
-db.users.insertOne({ name: "João", email: "joao@email.com", age: 30 });
+MySQL: INSERT INTO users (name, email, age) VALUES ('João', 'joao@email.com', 30);
+MongoDB: db.users.insertOne({ name: "João", email: "joao@email.com", age: 30 });
 
 Read (Consultar dados)
-MySQL:
-SELECT * FROM users WHERE age > 25;
-MongoDB:
-db.users.find({ age: { $gt: 25 } });
+MySQL: SELECT * FROM users WHERE age > 25;
+MongoDB: db.users.find({ age: { $gt: 25 } }); // great that(maior que)
 
 Update (Atualizar dados)
-MySQL:
-UPDATE users SET age = 31 WHERE email = 'joao@email.com';
-MongoDB:
-db.users.updateOne({ email: "joao@email.com" }, { $set: { age: 31 } });
+MySQL: UPDATE users SET age = 31 WHERE email = 'joao@email.com';
+MongoDB: db.users.updateOne({ email: "joao@email.com" }, { $set: { age: 31 } });
 
 Delete (Remover dados)
-MySQL:
-DELETE FROM users WHERE email = 'joao@email.com';
-MongoDB:
-db.users.deleteOne({ email: "joao@email.com" });
+MySQL: DELETE FROM users WHERE email = 'joao@email.com';
+MongoDB: db.users.deleteOne({ email: "joao@email.com" });
 
-3. Quando usar cada um?
+c)Quando usar um ou outro?
 
 Use MySQL se:
 Precisa de relacionamentos fortes entre dados.
@@ -440,18 +594,16 @@ Precisa de escalabilidade horizontal (muitas conexões simultâneas).
 Os dados são semiestruturados e podem mudar de formato com o tempo.
 Alta velocidade de leitura/escrita sem depender de JOINs.
 
-4. Conclusão
+d)Conclusão
 MySQL é melhor para sistemas estruturados (ERP, sistemas bancários).
 MongoDB é melhor para grandes volumes de dados não estruturados (logs, big data, aplicações web escaláveis).
 Se seu sistema envolve muitas consultas e grandes volumes de dados, o MongoDB pode ser mais eficiente. Se precisa de integridade e 
 estrutura rígida, o MySQL é melhor.
 
 
+32-Tipos de dados
 
-Observação:
-1-Tipos de dados
 a) Quais são os tipos de dados apropriados para colunas como endereço, e-mail, telefone e celular, para base de dados SQL?
-
 Razão Social VARCHAR(255)
 Nome Fantasia VARCHAR(255)
 CNPJ BIGINT(14), VARCHAR(18)
@@ -460,9 +612,9 @@ Email VARCHAR(100)
 Website VARCHAR(100)
 Telefone BIGINT(14) (Já considera números de 9 dígitos). Na dúvida, use VARCHAR
 Celular BIGINT(14) (Já considera números de 9 dígitos) Na dúvida, use VARCHAR
-Responsável VARCHAR(255), VARCHAR(100)
+Responsável VARCHAR(100)
 Endereço VARCHAR(150)
-Endereço, número VARCHAR(20) (lembre-se: "números" podem conter outros caracteres)
+Endereço, número VARCHAR(10) (lembre-se: "números" podem conter outros caracteres)
 Bairro VARCHAR(50)
 Cidade VARCHAR(50)
 UF CHAR(2), TINYINT(2) (uso de números se relacionado a outra tabela)
@@ -470,7 +622,6 @@ CEP INT(8), VARCHAR(10)
 Descrição TEXT
 
 b) Por que VARCHAR e não CHAR?
-
 VARCHAR possui um tamanho variável de acordo com o registro contido nele.
 Exemplo: Vou inserir a palavra "Yuran" que contém 5 caracteres em uma coluna VARCHAR(20) e o mesmo registro em outra coluna que é 
 CHAR(20).
