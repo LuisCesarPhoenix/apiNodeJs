@@ -38,7 +38,7 @@ b) params: Um array de valores a serem passados para a query (opcional, padrão 
 
   try {
     const [rows] = await connection.execute(query, params);
-    await connection.end(); // ✅ Fechando a conexão antes de retornar os dados.
+    await connection.end(); // Fechando a conexão antes de retornar os dados.
     console.log("🔌 Conexão com MySQL fechada.");
     return rows;
     /*
@@ -67,7 +67,7 @@ b) params: Um array de valores a serem passados para a query (opcional, padrão 
 
 module.exports = { queryDatabase };
 /*
-Exporta queryDatabase para que outros arquivos possam chamá-la.
+Exporta a função assícrona queryDatabase para que outros arquivos possam chamá-la.
 Permite que qualquer parte do projeto execute consultas no MySQL de forma segura e eficiente.
 */
 
