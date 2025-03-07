@@ -1,7 +1,7 @@
 /*
 src/config/mongoConfig.js (Conexão MongoDB sob demanda)
-Objetivo: Criar conexões temporárias com o MongoDB sob demanda, garantindo que a conexão seja aberta apenas quando 
-necessário e fechada após a operação.
+Objetivo: Criar conexões temporárias com o MongoDB sob demanda, garantindo que a conexão seja aberta apenas quando
+necessário e fechada após a operação para evitar o consumo de recursos.
 */
 
 const { MongoClient } = require("mongodb");
@@ -22,7 +22,7 @@ Declara uma função assíncrona chamada queryMongoDB, que recebe:
 - dbName → Nome do banco de dados a ser acessado.
 - collectionName → Nome da coleção (tabela no MongoDB) onde a operação será executada.
 - operation → Função assíncrona contendo a operação a ser realizada na coleção.
-A função é assíncrona para permitir o uso de await, garantindo execução fluida das operações.
+A função é assíncrona para permitir o uso de await, garantindo a execução fluida das operações.
 */
 
   const client = new MongoClient(process.env.MONGO_URI, {
@@ -30,7 +30,7 @@ A função é assíncrona para permitir o uso de await, garantindo execução fl
     useUnifiedTopology: true,
   });
   /*
-  ✔️ Cria uma nova instância do MongoClient, configurando:
+  Cria uma nova instância do MongoClient, configurando:
   - process.env.MONGO_URI: URL de conexão com o MongoDB obtida do .env.
   - { useNewUrlParser: true, useUnifiedTopology: true }: Configurações recomendadas para compatibilidade.
   */
@@ -43,7 +43,7 @@ A função é assíncrona para permitir o uso de await, garantindo execução fl
     */
 
     console.log(`✅ Conectado ao MongoDB: ${dbName}`);
-    // ✔️ Exibe uma mensagem de sucesso no console ao conectar ao banco de dados.
+    // Exibe uma mensagem de sucesso no console ao conectar ao banco de dados.
 
     const db = client.db(dbName);
     const collection = db.collection(collectionName);
@@ -85,7 +85,7 @@ Isso permite executar operações no MongoDB de forma segura e reutilizável.
 */
 
 /*
-📌 Resumo do Funcionamento:
+Resumo do Funcionamento:
 1. queryMongoDB() é chamada com os parâmetros:
    - dbName: Nome do banco de dados.
    - collectionName: Nome da coleção dentro do banco de dados.
@@ -94,7 +94,7 @@ Isso permite executar operações no MongoDB de forma segura e reutilizável.
 2. O código:
    a) Cria uma conexão temporária com o MongoDB.
    b) Obtém a referência ao banco de dados e à coleção.
-   c) Executa a operação fornecida na coleção.
+   c) Executa a operação, que foi chamada dentro da função queryMongo(), na coleção.
    d) Fecha a conexão antes de retornar os resultados.
 
 3. Benefícios:
