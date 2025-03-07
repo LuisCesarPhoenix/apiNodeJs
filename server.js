@@ -24,7 +24,7 @@ Importa as rotas definidas no arquivo "fileProcessingRoutes.js", localizado dent
 
 const userRoutes = require("./src/routes/userRoutes");
 /*
-Importa as rotas de usuário, que são responsáveis pelo CRUD de usuários no MySQL.
+Importa as rotas de usuário que são responsáveis pelo CRUD de usuários no MySQL.
 */
 
 app.use(express.json());
