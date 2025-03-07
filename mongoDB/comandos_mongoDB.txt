@@ -172,19 +172,6 @@ PS C:\Users\cesar\onedrive\documentos\documentos b\mongodb> mongoexport -c livro
 2025-02-19T10:51:11.980-0300    exported 431 records
 
 
-Exportar muitas collections:
-Quando o banco possui mais de uma collection a melhor opção de exportação é o mongodump;
-Utilizamos assim: mongodump -d <banco> -o <diretorio>
-Onde o -o criará uma pasta, com os arquivos de cada collection;
-PS C:\Users\cesar\onedrive\documentos\documentos b\mongodb> mongodump -d primeirobanco -o primeirobanco
-2025-02-19T22:09:50.626-0300    writing primeirobanco.quartacollection to primeirobanco\primeirobanco\quartacollection.bson
-2025-02-19T22:09:50.659-0300    writing primeirobanco.primeiracollection to primeirobanco\primeirobanco\primeiracollection.bson
-2025-02-19T22:09:50.660-0300    writing primeirobanco.terceiracollection to primeirobanco\primeirobanco\terceiracollection.bson
-2025-02-19T22:09:50.666-0300    done dumping primeirobanco.quartacollection (4 documents)
-2025-02-19T22:09:50.671-0300    done dumping primeirobanco.primeiracollection (3 documents)
-2025-02-19T22:09:50.675-0300    done dumping primeirobanco.terceiracollection (1 document)
-
-
 Importar dados do mongodump (muitas collections):
 Para importar os arquivos gerados do mongodump, utilizamos o mongorestore;
 O comando é o seguinte: mongorestore <diretorio>
@@ -205,6 +192,20 @@ PS C:\Users\cesar\onedrive\documentos\documentos b\mongodb> mongorestore primeir
 2025-02-19T22:35:23.451-0300    8 document(s) restored successfully. 0 document(s) failed to restore.
 
 
+Exportar muitas collections:
+Quando o banco possui mais de uma collection a melhor opção de exportação é o mongodump;
+Utilizamos assim: mongodump -d <nome-banco> -o <nome-do-diretorio>
+Onde o -o(output) criará uma pasta com o nome do diretóio informado, no local que você escolheu para salvar, com os arquivos de cada 
+collection;
+PS C:\Users\cesar\onedrive\documentos\documentos b\mongodb> mongodump -d primeirobanco -o primeirobanco
+2025-02-19T22:09:50.626-0300    writing primeirobanco.quartacollection to primeirobanco\primeirobanco\quartacollection.bson
+2025-02-19T22:09:50.659-0300    writing primeirobanco.primeiracollection to primeirobanco\primeirobanco\primeiracollection.bson
+2025-02-19T22:09:50.660-0300    writing primeirobanco.terceiracollection to primeirobanco\primeirobanco\terceiracollection.bson
+2025-02-19T22:09:50.666-0300    done dumping primeirobanco.quartacollection (4 documents)
+2025-02-19T22:09:50.671-0300    done dumping primeirobanco.primeiracollection (3 documents)
+2025-02-19T22:09:50.675-0300    done dumping primeirobanco.terceiracollection (1 document)
+
+
 Podemos checar algumas informações como, quantidade de consultas rodando, consumo de rede e outros dados;
 Teremos uma aba do terminal ocupada, atualizando a todo segundo e trazendo informações em tempo real;
 PS C:\Users\cesar> mongostat
@@ -221,13 +222,15 @@ insert query update delete getmore command dirty used flushes vsize   res qrw ar
     *0    *0     *0     *0       0     2|0  0.0% 0.0%       0 4.65G 35.0M 0|0 0|0   321b   84.4k    3 Feb 20 17:07:35.410
 
 
-Forma simples de remover bancos (Criar um snippet)
-No VS Code, abra a pasta em que está o banco de dados e cole seguinte script no mongoshell:
+Forma simples de remover vários bancos (Criar um snippet)
+No VS Code abra a pasta em que está o banco de dados, acesse o mongoshell(com o comando mongosh)  e cole seguinte script no terminal:
 test> Mongo().getDBNames().forEach(function(db){
 ...     if(['admin', 'config', 'local'].indexOf(db) < 0){
 ...         Mongo().getDB(db).dropDatabase();
 ...     }
 ... });
+
+Observação: O mongoDB precisa estar rodando no PC.
 
 
 A principal diferença entre implementar um CRUD com MySQL ou MongoDB está no modelo de dados e na forma como as consultas são 
@@ -266,43 +269,35 @@ Exemplo:
 2. Operações CRUD(create, read, update e delete):
 
 Create (Inserir dados)
-MySQL:
-INSERT INTO users (name, email, age) VALUES ('João', 'joao@email.com', 30);
-MongoDB:
-db.users.insertOne({ name: "João", email: "joao@email.com", age: 30 });
+MySQL: INSERT INTO users (name, email, age) VALUES ('João', 'joao@email.com', 30);
+MongoDB: db.users.insertOne({ name: "João", email: "joao@email.com", age: 30 });
 
 Read (Consultar dados)
-MySQL:
-SELECT * FROM users WHERE age > 25;
-MongoDB:
-db.users.find({ age: { $gt: 25 } });
+MySQL: SELECT * FROM users WHERE age > 25;
+MongoDB: db.users.find({ age: { $gt: 25 } }); // $gt - great that 
 
 Update (Atualizar dados)
-MySQL:
-UPDATE users SET age = 31 WHERE email = 'joao@email.com';
-MongoDB:
-db.users.updateOne({ email: "joao@email.com" }, { $set: { age: 31 } });
+MySQL: UPDATE users SET age = 31 WHERE email = 'joao@email.com';
+MongoDB: db.users.updateOne({ email: "joao@email.com" }, { $set: { age: 31 } });
 
 Delete (Remover dados)
-MySQL:
-DELETE FROM users WHERE email = 'joao@email.com';
-MongoDB:
-db.users.deleteOne({ email: "joao@email.com" });
+MySQL: DELETE FROM users WHERE email = 'joao@email.com';
+MongoDB: db.users.deleteOne({ email: "joao@email.com" });
 
 3. Quando usar cada um?
 
 Use MySQL se:
-Precisa de relacionamentos fortes entre dados.
+Precisar de relacionamentos fortes entre dados.
 Tem dados bem estruturados e não mudam com frequência.
 Precisa de transações ACID (Atomicidade, Consistência, Isolamento, Durabilidade).
 
 Use MongoDB se:
-Precisa de escalabilidade horizontal (muitas conexões simultâneas).
+Precisar de escalabilidade horizontal (muitas conexões simultâneas).
 Os dados são semiestruturados e podem mudar de formato com o tempo.
 Alta velocidade de leitura/escrita sem depender de JOINs.
 
 4. Conclusão
 MySQL é melhor para sistemas estruturados (ERP, sistemas bancários).
 MongoDB é melhor para grandes volumes de dados não estruturados (logs, big data, aplicações web escaláveis).
-Se seu sistema envolve muitas consultas e grandes volumes de dados, o MongoDB pode ser mais eficiente. Se precisa de integridade e 
+Se seu sistema envolve muitas consultas e grandes volumes de dados, o MongoDB pode ser mais eficiente. Se precisar de integridade e 
 estrutura rígida, o MySQL é melhor.
