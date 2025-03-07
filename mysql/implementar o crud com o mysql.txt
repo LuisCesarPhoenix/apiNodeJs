@@ -1,0 +1,57 @@
+1-Adicionar criptografia para o campo password bcrypt para enviar a senha já criptografada para o banco
+2. Criar função para autenticar o usuários consultando o usuário e password e retornar valor true ou false caso exista
+3. Gerar token de acesso a usuário autenticado
+4. Criar rotas Privadas 
+5. Criar rotas publicas
+
+Gerando token JWT para usuário logado
+Após confirmar os dados de autenticação com o banco de dados receberá como resposta do banco os dados do usuário como id,nome,etc
+estes dados seram usados para gerar o token JWT com o componente jsonwebtoken 
+
+Primeiro, instale as bibliotecas necessárias:
+npm install jsonwebtoken bcryptjs dotenv 
+
+jsonwebtoken → Biblioteca para geração e verificação de JWTs
+bcryptjs → Para hash e verificação de senhas
+dotenv → Para carregar variáveis de ambiente
+
+No arquivo .env crie uma variável para JWT_SECRET ex:
+JWT_SECRET=ef8rkd-siid898w-iji== 
+Este JWT_SECRET será responsável gerar um token valido para o usuário,e validar o token usado para acessar as páginas privadas como se fosse uma assinatura do token JWT
+
+Para testar as informações contidas dentro do token, copie o token gerado e acesse o site https://jwt.io e cole o token na área informada, assim poderá ver as informações de id do usuário logado, data de criação do token e expiração
+
+Exemplo de uso do jsnwebtoken para gerar um token
+// necessario importar dotenv e jsonwebtoken
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
+
+app.post('/login', async(req, res) => {
+  try{
+  // Recebe os dados do usuário na requisição
+  const {email, password} = req.body;
+
+  // Busca o usuario no banco de dados
+ // --- codigo de consulta no banco
+ const user = await // consulta o usuario no banco
+
+  // retorno da consulta
+ // Se não retornar nenhum valor na consulta retorna o erro
+ 
+  if(!user) return res.status(400).json({error:"Usuario não encontrado"})
+ 
+  // Compara as senhas com os dados recebidos do banco
+  
+  const isMatch = await bcrypt.compare(password, user.password);    
+ 
+  // Cria o token jwt valido por 1h
+  const token = jwt.sign({id:user.id,email:user.email}, process.env.JWT_SECRET,{expires:1h});
+ //retorna o resultado com o token para a requisição
+  res.json({message:"Login efetudo com sucesso",user,token})   
+          
+  }catch(err){
+  
+res.status(500).json({error:"Erro no servidor"})
+
+  }
+});
