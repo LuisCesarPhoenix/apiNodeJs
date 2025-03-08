@@ -8,18 +8,38 @@ local        80.00 KiB
 servidor_A  616.00 KiB
 
 
+
 Criar um banco de dados(o banco só é criado de fato quando os dados são inseridos):
 test> use primeirobanco
 switched to db primeirobanco
 primeirobanco>
 
 
-Criar a collection e inserir o primeiro dado:
+
+Criando uma collection e inserindo o primeiro dado:
 primeirobanco> db.primeiracollection.insertOne({nome: "Luis Carlos", idade: 33, hobbies: ["ler", "jogar", "correr", "programar"]})
 {
   acknowledged: true,
   insertedId: ObjectId('67b067d07e40a55de1cb0ce2')
 }
+
+
+
+Criando uma collection chamada provas:
+Criando 2 dados com os nomes dos alunos e um array chamado notas, com as notas das provas de cada aluno:
+escola> use aluno
+switched to db aluno
+aluno> db.provas.insertOne({nome: "Luis Carlos", notas: [ 8.5 , 7, 8 ]})
+{
+  acknowledged: true,
+  insertedId: ObjectId('67ca8d568a13d0d43ecb0ce2')
+}
+aluno> db.provas.insertOne({nome: "João Paulo", notas: [ 9 , 8.5, 10 ]})
+{
+  acknowledged: true,
+  insertedId: ObjectId('67ca8fb28a13d0d43ecb0ce3')
+}
+
 
 
 Encontrar um dado no banco:
@@ -29,6 +49,24 @@ primeirobanco> db.primeiracollection.findOne({_id: ObjectId('67ad7ccb3caf60af36c
   nome: 'Luis Cesar',
   idade: 42
 }
+
+
+
+Exibindo os dados da collection provas:
+aluno> db.provas.find()
+[
+  {
+    _id: ObjectId('67ca8d568a13d0d43ecb0ce2'),
+    nome: 'Luis Carlos',
+    notas: [ 8.5, 7, 8 ]
+  },
+  {
+    _id: ObjectId('67ca8fb28a13d0d43ecb0ce3'),
+    nome: 'João Paulo',
+    notas: [ 9, 8.5, 10 ]
+  }
+]
+
 
 
 Encontrar mais de um dado no banco:
@@ -48,6 +86,7 @@ primeirobanco> db.primeiracollection.find({})
 ]
 
 
+
 Encontrar todos os dados que tenha idade 42:
 primeirobanco> db.primeiracollection.find({"idade": 42})
 [
@@ -59,15 +98,18 @@ primeirobanco> db.primeiracollection.find({"idade": 42})
 ]
 
 
+
 O comando use serve para criar e trocar de banco de dados:
 primeirobanco> use servidor_A
 switched to db servidor_A
 servidor_A>
 
 
+
 O comando db serve para mostrar o banco atual:
 servidor_A> db
 servidor_A
+
 
 
 A função pretty() trás um retorno de dados melhor formatado:
@@ -93,16 +135,19 @@ primeirobanco> db.primeiracollection.find().pretty()
 ]
 
 
+
 Criação de collections de forma implicita:
 Quando eu insiro limitações eu tenho que colocar o atributo capped. 
 primeirobanco> db.createCollection("segundacollection", { capped: true, size: 1000, max: 3 })
 { ok: 1 }
 
 
+
 Exibir todas as collections:
 primeirobanco> show collections
 primeiracollection
 segundacollection
+
 
 
 Inserir múltiplos documentos de uma vez:
@@ -117,6 +162,7 @@ primeirobanco> db.quartacollection.insertMany([{nome: "Luis Cesar", salario: 250
     '3': ObjectId('67b19e617e40a55de1cb0cec')
   }
 }
+
 
 
 Podemos remover collections quando elas não forem mais necessárias ou se errarmos o nome, por exemplo;
@@ -137,6 +183,7 @@ primeirobanco> db.segundacollection.drop()
 true
 
 
+
 Removendo banco de dados:
 Todos os dados e collections serão excluídos.
 test> show dbs
@@ -151,12 +198,12 @@ test> db.dropDatabase()
 {"dropped" : "primeirobanco" , "ok" : 1}
 
 
+
 Importar banco de dados em JSON:
 PS C:\users\cesar\onedrive\documentos\documentos b\mongodb\curso_mongodb-main\2_gerenciamento_de_dbs> mongoimport books.json -d 
 booksData -c livros
 2025-02-19T03:57:12.419-0300    connected to: mongodb://localhost/
 2025-02-19T03:57:13.177-0300    431 document(s) imported successfully. 0 document(s) failed to import.
-
 test> show dbs
 admin           40.00 KiB
 booksData      284.00 KiB
@@ -166,10 +213,12 @@ primeirobanco  160.00 KiB
 servidor_A     616.00 KiB
 
 
+
 Exportar banco de dados em JSON:
 PS C:\Users\cesar\onedrive\documentos\documentos b\mongodb> mongoexport -c livros -d booksData -o booksData.json
 2025-02-19T10:51:11.873-0300    connected to: mongodb://localhost/
 2025-02-19T10:51:11.980-0300    exported 431 records
+
 
 
 Importar dados do mongodump (muitas collections):
@@ -192,6 +241,7 @@ PS C:\Users\cesar\onedrive\documentos\documentos b\mongodb> mongorestore primeir
 2025-02-19T22:35:23.451-0300    8 document(s) restored successfully. 0 document(s) failed to restore.
 
 
+
 Exportar muitas collections:
 Quando o banco possui mais de uma collection a melhor opção de exportação é o mongodump;
 Utilizamos assim: mongodump -d <nome-banco> -o <nome-do-diretorio>
@@ -204,6 +254,7 @@ PS C:\Users\cesar\onedrive\documentos\documentos b\mongodb> mongodump -d primeir
 2025-02-19T22:09:50.666-0300    done dumping primeirobanco.quartacollection (4 documents)
 2025-02-19T22:09:50.671-0300    done dumping primeirobanco.primeiracollection (3 documents)
 2025-02-19T22:09:50.675-0300    done dumping primeirobanco.terceiracollection (1 document)
+
 
 
 Podemos checar algumas informações como, quantidade de consultas rodando, consumo de rede e outros dados;
@@ -222,6 +273,7 @@ insert query update delete getmore command dirty used flushes vsize   res qrw ar
     *0    *0     *0     *0       0     2|0  0.0% 0.0%       0 4.65G 35.0M 0|0 0|0   321b   84.4k    3 Feb 20 17:07:35.410
 
 
+
 Forma simples de remover vários bancos (Criar um snippet)
 No VS Code abra a pasta em que está o banco de dados, acesse o mongoshell(com o comando mongosh)  e cole seguinte script no terminal:
 test> Mongo().getDBNames().forEach(function(db){
@@ -230,7 +282,8 @@ test> Mongo().getDBNames().forEach(function(db){
 ...     }
 ... });
 
-Observação: O mongoDB precisa estar rodando no PC.
+Observação: O mongoDB precisa ter sido iniciado no PC.
+
 
 
 A principal diferença entre implementar um CRUD com MySQL ou MongoDB está no modelo de dados e na forma como as consultas são 
